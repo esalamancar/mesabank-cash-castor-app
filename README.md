@@ -44,13 +44,22 @@ gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío
 
 ## Flujo de trabajo (Git)
 
-- **Rama de trabajo:** `develop`. Todo el desarrollo se integra ahí; `main`
-  queda reservada para releases (sin estrategia de release definida aún).
-- **`develop` está protegida:** no se permite push directo (salvo bypass de
-  administrador de repositorio). Todo cambio entra por **Pull Request**.
+- **Rama de trabajo y por defecto: `develop`.** Todo el desarrollo se
+  integra ahí; `main` queda reservada para releases (sin estrategia de
+  release definida aún).
+- **`develop` está protegida** mediante un Ruleset de GitHub (equivalente
+  moderno a "branch protection"): no se permite push directo, force-push ni
+  borrado de la rama. Todo cambio entra por **Pull Request**. Solo el rol
+  Admin del repositorio (`@esalamancar`) puede saltarse la regla en caso de
+  emergencia; los colaboradores con acceso `Write` no pueden.
+- **Repositorio público:** las reglas de rama (Ruleset) en GitHub requieren
+  plan Pro para repos privados en cuentas personales; se optó por hacer el
+  repo público en vez de pagar el upgrade (2026-09-18). No hay código de
+  negocio real todavía, solo scaffolding y documentación.
 - **Revisión obligatoria:** cada PR requiere al menos una aprobación de
   code owner (`.github/CODEOWNERS`, actualmente `@esalamancar` para todo el
-  repositorio).
+  repositorio). Nota: GitHub no permite auto-aprobar tu propio PR; los PRs
+  de `@esalamancar` los aprueba/mergea vía el bypass de Admin.
 - **Checks obligatorios antes de fusionar** (`.github/workflows/quality-checks.yml`):
   - `Backend build` — compila `backend/` con `go build`.
   - `Frontend build` — compila `frontend/` con `npm run build`.
