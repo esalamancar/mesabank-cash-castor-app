@@ -5,28 +5,28 @@ ordenadas por dependencia. No son historias de usuario funcionales, sino
 trabajo de habilitación para que las épicas de `06-epicas.md` puedan
 empezar a construirse desde la Fase 1.
 
-**Convención de estimación:** días-persona (1 persona, jornada completa).
-
 ## Resumen ordenado por dependencia
 
-| # | Tarea | Estimación | Depende de |
-|---|-------|------------|------------|
-| T-01 | Setup del repositorio backend (Go) | 1 día | — |
-| T-02 | Setup del repositorio frontend (React + Vite + PWA) | 1 día | — |
-| T-03 | Definición y publicación de la OpenAPI spec | 0.5 día | `08-openapi.yaml` (ya generado) |
-| T-04 | Setup de PostgreSQL y Redis en local/desarrollo (docker-compose) | 1 día | T-01 |
-| T-05 | Modelo de datos y migraciones iniciales | 2 días | T-04 |
-| T-06 | Esqueleto de capas backend (API/Servicios/Repositorios/WebSocket) | 2 días | T-01, T-05 |
-| T-07 | Cliente API + WebSocket base en el frontend | 1.5 días | T-02, T-03 |
-| T-08 | Coordinación con `single-iac`: convenciones de namespace, secrets y pipelines | 1 día (bloqueante externo) | — |
-| T-09 | Manifiestos de Kubernetes (namespace, ConfigMaps, Secrets) siguiendo `single-iac` | 1.5 días | T-08 |
-| T-10 | Pipeline de CI/CD base (build, test, lint, deploy) en `single-iac` | 2 días | T-01, T-02, T-08, T-09 |
-| T-11 | Observabilidad base (logging estructurado, health checks, métricas) | 1.5 días | T-06 |
-| T-12 | Documentación de entornos (local, dev, staging, prod) | 0.5 día | T-04, T-09 |
-| T-13 | Quality gate de PRs en GitHub Actions (compilación + build de imágenes Docker) | 1 día | T-01, T-02 |
+| # | Tarea | Depende de |
+|---|-------|------------|
+| T-01 | Setup del repositorio backend (Go) | — |
+| T-02 | Setup del repositorio frontend (React + Vite + PWA) | — |
+| T-03 | Definición y publicación de la OpenAPI spec | `08-openapi.yaml` (ya generado) |
+| T-04 | Setup de PostgreSQL y Redis en local/desarrollo (docker-compose) | T-01 |
+| T-05 | Modelo de datos y migraciones iniciales | T-04 |
+| T-06 | Esqueleto de capas backend (API/Servicios/Repositorios/WebSocket) | T-01, T-05 |
+| T-07 | Cliente API + WebSocket base en el frontend | T-02, T-03 |
+| T-08 | Coordinación con `single-iac`: convenciones de namespace, secrets y pipelines | — |
+| T-09 | Manifiestos de Kubernetes (namespace, ConfigMaps, Secrets) siguiendo `single-iac` | T-08 |
+| T-10 | Pipeline de CI/CD base (build, test, lint, deploy) en `single-iac` | T-01, T-02, T-08, T-09 |
+| T-11 | Observabilidad base (logging estructurado, health checks, métricas) | T-06 |
+| T-12 | Documentación de entornos (local, dev, staging, prod) | T-04, T-09 |
+| T-13 | Quality gate de PRs en GitHub Actions (compilación + build de imágenes Docker) | T-01, T-02 |
 
-**Total estimado:** ~16.5 días-persona, ejecutable en paralelo entre 1-2
-desarrolladores en las 2 semanas de la Fase 0.
+No se asignan tiempos por tarea: cuánto tarda cada una depende de quién la
+haga (herramientas, experiencia), no es una propiedad fija de la tarea. El
+orden de dependencia arriba sí es fijo y es lo que determina qué se puede
+paralelizar entre el equipo disponible.
 
 ---
 
