@@ -1,0 +1,1125 @@
+openapi: 3.1.0
+info:
+  title: MesaBank API
+  version: "0.1.0"
+  description: >
+    API del MVP de MesaBank. Backend en Go + Gin, expuesto vía HTTPS con
+    autenticación JWT Bearer. Además de los endpoints REST documentados aquí,
+    la API expone un canal de tiempo real por WebSocket en
+    `wss://{host}/games/{code}/ws` (ver `03-arquitectura.md`).
+
+    **Nota sobre WebSocket:** OpenAPI 3.1 no tiene soporte nativo para
+    describir un canal WebSocket como una operación HTTP normal. El endpoint
+    se documenta más abajo (tag `tiempo-real`) de forma descriptiva, usando
+    la extensión `x-websocket: true`, únicamente con fines de referencia; no
+    es una operación HTTP invocable con este contrato.
+
+    **Decisiones de alcance del MVP (PO, 2026-09-18):**
+    - El campo `GameConfig.inflation` se acepta y se persiste, pero no tiene
+      ningún efecto funcional en el MVP (pendiente de POC, ver
+      `07-historias-usuario.md`, US-036 y US-201).
+    - El arqueo de papel moneda (`/games/{code}/cash-audit`) solo puede ser
+      declarado por el rol Banco.
+    - `/ranking` es un leaderboard de mejores partidas individuales, sin
+      acumulación por usuario.
+    - Los espectadores no tienen acceso a `/games/{code}/transactions`.
+  contact:
+    name: Erick Salamanca
+    email: easalamancar@siesa.com
+
+servers:
+  - url: https://api.mesabank.example.com/v1
+    description: Producción (placeholder, pendiente de definir dominio real)
+  - url: https://staging-api.mesabank.example.com/v1
+    description: Staging
+
+tags:
+  - name: auth
+    description: Registro, login y sesión.
+  - name: games
+    description: Creación, unión y ciclo de vida de partidas.
+  - name: config
+    description: Configuración económica de una partida (rol Banco).
+  - name: finanzas
+    description: Transferencias, consignaciones, préstamos, arqueo y auditoría.
+  - name: tiempo-real
+    description: Turnos y sincronización en tiempo real.
+  - name: ranking
+    description: Puntuación y leaderboard global.
+  - name: admin
+    description: Administración global de la aplicación (baja prioridad, MVP).
+
+security:
+  - bearerAuth: []
+
+paths:
+  # ---------------------------------------------------------------------
+  # Autenticación
+  # ---------------------------------------------------------------------
+  /auth/register:
+    post:
+      tags: [auth]
+      summary: Registrar un nuevo usuario
+      description: RF-01.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            example:
+              username: erick99
+              pin: "4821"
+      responses:
+        '201':
+          description: Usuario creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              example:
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                user:
+                  id: 3f2f3f2e-6c1a-4c1a-9a1a-1a2b3c4d5e6f
+                  username: erick99
+                  is_guest: false
+                  created_at: "2026-09-18T10:00:00Z"
+        '409':
+          description: El nombre de usuario ya existe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags: [auth]
+      summary: Iniciar sesión con usuario y PIN
+      description: RF-02.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            example:
+              username: erick99
+              pin: "4821"
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Credenciales inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/guest:
+    post:
+      tags: [auth]
+      summary: Crear sesión de invitado
+      description: RF-04. Los invitados no pueden crear partidas ni entran al ranking.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [display_name]
+              properties:
+                display_name:
+                  type: string
+                  example: Visitante42
+      responses:
+        '201':
+          description: Sesión de invitado creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  /auth/refresh:
+    post:
+      tags: [auth]
+      summary: Renovar token de sesión
+      description: >
+        RF-03 / ADR-005. El TTL exacto de acceso y refresh está pendiente de
+        definición (ver `supuestos-y-preguntas-abiertas.md`, pregunta #7);
+        el contrato del endpoint no depende de ese valor.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refresh_token]
+              properties:
+                refresh_token:
+                  type: string
+      responses:
+        '200':
+          description: Nuevo token emitido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Refresh token inválido o expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/logout:
+    post:
+      tags: [auth]
+      summary: Cerrar sesión
+      responses:
+        '204':
+          description: Sesión cerrada (token invalidado)
+
+  /users/me:
+    get:
+      tags: [auth]
+      summary: Obtener el perfil del usuario autenticado
+      description: Soporta RF-03 (recuperación de sesión).
+      responses:
+        '200':
+          description: Perfil del usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  # ---------------------------------------------------------------------
+  # Partidas
+  # ---------------------------------------------------------------------
+  /games:
+    post:
+      tags: [games]
+      summary: Crear una partida
+      description: RF-05, RF-08, RF-12 a RF-18.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [config]
+              properties:
+                config:
+                  $ref: '#/components/schemas/GameConfig'
+            example:
+              config:
+                currency: COP
+                exchange_rate: 1
+                inflation: 0
+                fee: 0
+                interest_type: per_round
+                interest_rate: 5
+                interest_interval: null
+                max_debt_multiplier: 2
+                total_digital: 50000
+                total_paper: 50000
+                initial_per_player: 1500
+      responses:
+        '201':
+          description: Partida creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+  /games/{code}:
+    get:
+      tags: [games]
+      summary: Obtener información pública de una partida
+      description: RF-07 (soporte), US-016.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '200':
+          description: Información de la partida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: Partida no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /games/{code}/join:
+    post:
+      tags: [games]
+      summary: Unirse a una partida
+      description: RF-07. CA-01.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [role]
+              properties:
+                role:
+                  type: string
+                  enum: [player, spectator]
+            example:
+              role: player
+      responses:
+        '200':
+          description: Unión exitosa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        '404':
+          description: Código de partida inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /games/{code}/players:
+    get:
+      tags: [games]
+      summary: Listar jugadores y sus saldos
+      description: Usado por el panel del Banco y por espectadores (solo saldos, US-084).
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '200':
+          description: Lista de jugadores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+
+  /games/{code}/players/{playerId}/expel:
+    post:
+      tags: [games]
+      summary: Expulsar a un jugador en bancarrota
+      description: RF-11. Solo Banco. Requiere liquidación previa (US-055).
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+        - $ref: '#/components/parameters/PlayerId'
+      responses:
+        '200':
+          description: Jugador expulsado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        '409':
+          description: El jugador no está marcado como bancarrota
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /games/{code}/reset:
+    post:
+      tags: [games]
+      summary: Solicitar reinicio de partida
+      description: >
+        RF-10. Inicia una solicitud de reinicio que requiere al menos tres
+        confirmaciones (CA-04) antes de ejecutarse. Ver
+        `POST /games/{code}/reset/confirm`.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '202':
+          description: Solicitud de reinicio creada, pendiente de confirmaciones
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetRequest'
+
+  /games/{code}/reset/confirm:
+    post:
+      tags: [games]
+      summary: Confirmar una solicitud de reinicio pendiente
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '200':
+          description: Confirmación registrada; si se alcanza el mínimo, la partida se reinicia
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetRequest'
+              example:
+                confirmations_required: 3
+                confirmations_received: 2
+                executed: false
+
+  # ---------------------------------------------------------------------
+  # Operaciones financieras
+  # ---------------------------------------------------------------------
+  /games/{code}/balance:
+    get:
+      tags: [finanzas]
+      summary: Consultar mi propio saldo
+      description: RF-19 (soporte).
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '200':
+          description: Saldo propio
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+
+  /games/{code}/transfer:
+    post:
+      tags: [finanzas]
+      summary: Transferencia P2P instantánea e idempotente
+      description: RF-19. ADR-002. CA-02.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+            example:
+              to_player_id: 9c4b1e2a-1111-4a2b-8c3d-abcdef123456
+              amount: 200
+              idempotency_key: 5f6e7d8c-9b0a-4c1d-8e2f-3a4b5c6d7e8f
+      responses:
+        '200':
+          description: Transferencia procesada (o repetida de forma idempotente)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+              example:
+                id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
+                game_id: 0f1e2d3c-4b5a-6978-8f9e-0a1b2c3d4e5f
+                from_player_id: 111e1111-e11b-11d1-a111-111111111111
+                to_player_id: 9c4b1e2a-1111-4a2b-8c3d-abcdef123456
+                amount: 200
+                type: transfer
+                idempotency_key: 5f6e7d8c-9b0a-4c1d-8e2f-3a4b5c6d7e8f
+                created_at: "2026-09-18T10:15:00Z"
+        '402':
+          description: Saldo insuficiente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /games/{code}/deposit:
+    post:
+      tags: [finanzas]
+      summary: Consignar papel moneda a la cuenta digital
+      description: RF-20.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                amount:
+                  type: number
+                  exclusiveMinimum: 0
+              example:
+                amount: 200
+      responses:
+        '200':
+          description: Consignación procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+
+  /games/{code}/loans:
+    post:
+      tags: [finanzas]
+      summary: Otorgar un préstamo a un jugador
+      description: RF-21. Solo Banco. RF-18 (límite de deuda).
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoanRequest'
+            example:
+              player_id: 9c4b1e2a-1111-4a2b-8c3d-abcdef123456
+              amount: 300
+              interest_rate: 5
+              due_round: 3
+      responses:
+        '201':
+          description: Préstamo otorgado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '422':
+          description: El préstamo excede la deuda máxima permitida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /games/{code}/loans/{loanId}/repay:
+    post:
+      tags: [finanzas]
+      summary: Pagar (total o parcialmente) un préstamo activo
+      description: RF-23.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+        - name: loanId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                amount:
+                  type: number
+      responses:
+        '200':
+          description: Pago registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+
+  /games/{code}/players/{playerId}/liquidate:
+    post:
+      tags: [finanzas]
+      summary: Liquidar a un jugador en bancarrota
+      description: RF-24. Solo Banco. CA-03.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+        - $ref: '#/components/parameters/PlayerId'
+      responses:
+        '200':
+          description: Liquidación ejecutada; acreedores pagados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+
+  /games/{code}/cash-audit:
+    get:
+      tags: [finanzas]
+      summary: Consultar el último arqueo de caja
+      description: RF-25. Solo Banco.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '200':
+          description: Último arqueo registrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashAudit'
+    post:
+      tags: [finanzas]
+      summary: Registrar un arqueo de caja (declaración del Banco)
+      description: >
+        RF-25. Solo el rol Banco puede declarar el arqueo (decisión del PO,
+        2026-09-18). No existe un endpoint equivalente para que un jugador
+        declare su propio papel moneda.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CashAuditRequest'
+            example:
+              paper_in_bank: 4000
+              estimated_paper_by_player:
+                9c4b1e2a-1111-4a2b-8c3d-abcdef123456: 6000
+      responses:
+        '201':
+          description: Arqueo registrado, con indicación de si cuadra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CashAudit'
+              example:
+                total_paper_configured: 10000
+                paper_in_bank: 4000
+                estimated_paper_total: 6000
+                difference: 0
+                balanced: true
+                created_at: "2026-09-18T10:20:00Z"
+
+  /games/{code}/transactions:
+    get:
+      tags: [finanzas]
+      summary: Historial de ingresos y egresos
+      description: >
+        RF-26 (propio jugador) y RF-27 (auditoría completa, solo Banco). Un
+        jugador solo puede consultar su propio historial (`player_id`
+        implícito en el token); el Banco puede omitir el filtro para ver
+        todas las transacciones. Los espectadores no tienen acceso a este
+        endpoint (decisión del PO, 2026-09-18).
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+        - name: player_id
+          in: query
+          required: false
+          description: Solo el Banco puede consultar el historial de otro jugador.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Lista de transacciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '403':
+          description: Sin permiso para consultar este historial
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /games/{code}/audit:
+    get:
+      tags: [finanzas]
+      summary: Auditoría completa de la partida
+      description: RF-27. Solo Banco.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '200':
+          description: Registro de auditoría
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLog'
+
+  # ---------------------------------------------------------------------
+  # Tiempo real y turnos
+  # ---------------------------------------------------------------------
+  /games/{code}/turn/next:
+    post:
+      tags: [tiempo-real]
+      summary: Avanzar el turno al siguiente jugador
+      description: RF-29. Dispara el cálculo de interés por ronda (RF-30).
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '200':
+          description: Turno avanzado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  current_player_id:
+                    type: string
+                    format: uuid
+
+  /games/{code}/ws:
+    get:
+      tags: [tiempo-real]
+      summary: Canal WebSocket de eventos en tiempo real
+      description: >
+        RF-28. Documentado con fines de referencia; no es una operación HTTP
+        REST convencional (ver nota en `info.description`). Eventos
+        emitidos: `balance_updated`, `transaction_created`, `loan_created`,
+        `player_expelled`, `cash_audit_updated`, `turn_changed`,
+        `game_reset`.
+      x-websocket: true
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '101':
+          description: Upgrade a conexión WebSocket
+
+  # ---------------------------------------------------------------------
+  # Ranking
+  # ---------------------------------------------------------------------
+  /games/{code}/finish:
+    post:
+      tags: [ranking]
+      summary: Finalizar la partida y calcular puntuaciones
+      description: RF-32. Solo Banco.
+      parameters:
+        - $ref: '#/components/parameters/GameCode'
+      responses:
+        '200':
+          description: Partida finalizada con puntuaciones calculadas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RankingEntry'
+
+  /ranking:
+    get:
+      tags: [ranking]
+      summary: Leaderboard global de mejores partidas
+      description: >
+        RF-33, RF-34. Leaderboard de mejores puntuaciones de partidas
+        individuales de usuarios registrados (decisión del PO, 2026-09-18);
+        no incluye invitados ni acumula puntuaciones por usuario.
+      security:
+        - bearerAuth: []
+        - {}
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+      responses:
+        '200':
+          description: Listado ordenado de mejores puntuaciones
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RankingEntry'
+              example:
+                - user_id: 3f2f3f2e-6c1a-4c1a-9a1a-1a2b3c4d5e6f
+                  username: erick99
+                  game_id: 0f1e2d3c-4b5a-6978-8f9e-0a1b2c3d4e5f
+                  score: 8200
+                  achieved_at: "2026-09-18T11:00:00Z"
+
+  # ---------------------------------------------------------------------
+  # Administración (baja prioridad)
+  # ---------------------------------------------------------------------
+  /admin/currencies:
+    get:
+      tags: [admin]
+      summary: Listar monedas soportadas
+      responses:
+        '200':
+          description: Lista de monedas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Currency'
+    post:
+      tags: [admin]
+      summary: Agregar una moneda soportada
+      description: Solo Admin general.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Currency'
+      responses:
+        '201':
+          description: Moneda creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Currency'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    GameCode:
+      name: code
+      in: path
+      required: true
+      description: Código corto único de la partida.
+      schema:
+        type: string
+        example: ABCD
+    PlayerId:
+      name: playerId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+        details:
+          type: string
+      example:
+        error: insufficient_balance
+        details: El saldo digital no alcanza para cubrir el monto solicitado.
+
+    RegisterRequest:
+      type: object
+      required: [username, pin]
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 32
+        pin:
+          type: string
+          pattern: '^[0-9]{4,6}$'
+          description: PIN de 4 a 6 dígitos. Se almacena como hash (RNF-06).
+
+    LoginRequest:
+      type: object
+      required: [username, pin]
+      properties:
+        username:
+          type: string
+        pin:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT de acceso.
+        refresh_token:
+          type: string
+          description: >
+            Token de refresh (ADR-005). TTL exacto pendiente de definición.
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      description: Corresponde a la entidad `User` del PRD §5.
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        is_guest:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    Game:
+      type: object
+      description: Corresponde a la entidad `Game` del PRD §5.
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        qr_url:
+          type: string
+          format: uri
+        link:
+          type: string
+          format: uri
+        status:
+          type: string
+          enum: [lobby, active, finished]
+        created_by:
+          type: string
+          format: uuid
+        config:
+          $ref: '#/components/schemas/GameConfig'
+
+    GameConfig:
+      type: object
+      description: Corresponde a la entidad `GameConfig` del PRD §5.
+      required:
+        - currency
+        - total_digital
+        - total_paper
+        - initial_per_player
+      properties:
+        currency:
+          type: string
+          description: "USD, COP, EUR o código de moneda personalizada (ver /admin/currencies)."
+          example: COP
+        exchange_rate:
+          type: number
+          default: 1
+        inflation:
+          type: [number, "null"]
+          description: >
+            RF-15. Reservado para fase 2: se persiste pero no tiene efecto
+            funcional en el MVP (decisión del PO, 2026-09-18). Pendiente de
+            un POC jugando una ronda real antes de definir su mecánica
+            (afecta precios, tasa de cambio o saldos).
+          default: null
+        fee:
+          type: number
+          default: 0
+          description: Comisión por transferencia (RF-16). Por defecto 0.
+        interest_type:
+          type: [string, "null"]
+          enum: [per_round, per_time, null]
+        interest_rate:
+          type: [number, "null"]
+        interest_interval:
+          type: [integer, "null"]
+          description: Minutos entre cálculos, solo aplica si interest_type = per_time.
+        max_debt_multiplier:
+          type: number
+          description: RF-18. Múltiplo del valor inicial que define la deuda máxima.
+        total_digital:
+          type: number
+          description: Masa monetaria digital total (fija, ADR-003).
+        total_paper:
+          type: number
+          description: Masa monetaria en papel total (fija, ADR-003).
+        initial_per_player:
+          type: number
+          description: Asignación inicial de digital y papel por jugador.
+
+    Player:
+      type: object
+      description: Corresponde a la entidad `Player` del PRD §5.
+      properties:
+        id:
+          type: string
+          format: uuid
+        game_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        role:
+          type: string
+          enum: [bank, player, spectator]
+        digital_balance:
+          type: number
+        paper_balance:
+          type: number
+          description: >
+            Solo cambia por asignación inicial y consignaciones (US-051). No
+            existe una acción de "declarar papel" para el jugador (decisión
+            del PO, 2026-09-18).
+        debt:
+          type: number
+        is_bankrupt:
+          type: boolean
+
+    TransferRequest:
+      type: object
+      required: [to_player_id, amount, idempotency_key]
+      properties:
+        to_player_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          exclusiveMinimum: 0
+        idempotency_key:
+          type: string
+          format: uuid
+          description: Generada por el cliente (ADR-002). Redis conserva el resultado 24h.
+
+    Transaction:
+      type: object
+      description: Corresponde a la entidad `Transaction` del PRD §5.
+      properties:
+        id:
+          type: string
+          format: uuid
+        game_id:
+          type: string
+          format: uuid
+        from_player_id:
+          type: [string, "null"]
+          format: uuid
+        to_player_id:
+          type: [string, "null"]
+          format: uuid
+        amount:
+          type: number
+        type:
+          type: string
+          enum: [transfer, deposit, loan, loan_repayment, interest, liquidation]
+        idempotency_key:
+          type: [string, "null"]
+        created_at:
+          type: string
+          format: date-time
+
+    LoanRequest:
+      type: object
+      required: [player_id, amount, interest_rate, due_round]
+      properties:
+        player_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+        interest_rate:
+          type: number
+        due_round:
+          type: integer
+
+    Loan:
+      type: object
+      description: Corresponde a la entidad `Loan` del PRD §5.
+      properties:
+        id:
+          type: string
+          format: uuid
+        game_id:
+          type: string
+          format: uuid
+        player_id:
+          type: string
+          format: uuid
+        amount:
+          type: number
+        interest_rate:
+          type: number
+        due_round:
+          type: integer
+        status:
+          type: string
+          enum: [active, paid, defaulted]
+
+    AuditLog:
+      type: object
+      description: Corresponde a la entidad `AuditLog` del PRD §5.
+      properties:
+        id:
+          type: string
+          format: uuid
+        game_id:
+          type: string
+          format: uuid
+        player_id:
+          type: [string, "null"]
+          format: uuid
+        action:
+          type: string
+          example: transfer_created
+        details:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    CashAuditRequest:
+      type: object
+      required: [paper_in_bank]
+      properties:
+        paper_in_bank:
+          type: number
+          description: Papel moneda que el Banco declara tener físicamente en caja.
+        estimated_paper_by_player:
+          type: object
+          description: Mapa player_id -> papel estimado, declarado por el Banco.
+          additionalProperties:
+            type: number
+
+    CashAudit:
+      type: object
+      properties:
+        total_paper_configured:
+          type: number
+        paper_in_bank:
+          type: number
+        estimated_paper_total:
+          type: number
+        difference:
+          type: number
+        balanced:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    ResetRequest:
+      type: object
+      properties:
+        confirmations_required:
+          type: integer
+          default: 3
+        confirmations_received:
+          type: integer
+        executed:
+          type: boolean
+
+    RankingEntry:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        game_id:
+          type: string
+          format: uuid
+        score:
+          type: number
+          description: Patrimonio neto final (digital + papel declarado - deuda).
+        achieved_at:
+          type: string
+          format: date-time
+
+    Currency:
+      type: object
+      required: [code, symbol]
+      properties:
+        code:
+          type: string
+          example: COP
+        symbol:
+          type: string
+          example: "$"
+        default_exchange_rate:
+          type: number
+          default: 1
