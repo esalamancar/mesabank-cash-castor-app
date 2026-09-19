@@ -73,3 +73,22 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
 - Mecanismo funcional de inflación (fase 2, pendiente de POC).
 - Convenciones exactas de `single-iac` (namespaces, secrets, pipelines).
 - TTL exacto de JWT y estrategia completa de refresh.
+
+## [0.1.0-scaffold] - 2026-09-18
+
+### Añadido
+- Scaffold mínimo de `backend/` (Go + Gin, endpoint `GET /healthz`) y
+  `frontend/` (Vite + React + TypeScript), con `Dockerfile` multi-stage para
+  cada uno (T-01/T-02 del backlog de Sprint 0).
+- Workflow `.github/workflows/quality-checks.yml`: quality gate de PRs hacia
+  `develop` con cuatro checks (compilación de backend y frontend, build de
+  ambas imágenes Docker), condicionados a qué carpeta cambió en el PR
+  (T-13 del backlog de Sprint 0).
+- `.github/CODEOWNERS` asignando a `@esalamancar` como revisor obligatorio
+  de todo el repositorio.
+- Rama `develop` como rama de trabajo, protegida: solo se integra vía PR con
+  al menos una aprobación de code owner y los checks de calidad en verde.
+- Acceso `Write` (equivalente a "developer") para `2alelagos-dot`, `LoBe4`
+  y `nCrisz`.
+- Documentado el flujo de trabajo de Git y los checks requeridos en
+  `README.md`.

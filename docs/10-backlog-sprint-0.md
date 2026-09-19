@@ -23,8 +23,9 @@ empezar a construirse desde la Fase 1.
 | T-10 | Pipeline de CI/CD base (build, test, lint, deploy) en `single-iac` | 2 días | T-01, T-02, T-08, T-09 |
 | T-11 | Observabilidad base (logging estructurado, health checks, métricas) | 1.5 días | T-06 |
 | T-12 | Documentación de entornos (local, dev, staging, prod) | 0.5 día | T-04, T-09 |
+| T-13 | Quality gate de PRs en GitHub Actions (compilación + build de imágenes Docker) | 1 día | T-01, T-02 |
 
-**Total estimado:** ~15.5 días-persona, ejecutable en paralelo entre 1-2
+**Total estimado:** ~16.5 días-persona, ejecutable en paralelo entre 1-2
 desarrolladores en las 2 semanas de la Fase 0.
 
 ---
@@ -37,6 +38,10 @@ desarrolladores en las 2 semanas de la Fase 0.
 - Configurar Gin, middleware base (recovery, CORS, logging).
 - Configurar linting (`golangci-lint`) y formato (`gofmt`/`goimports`).
 - Configurar `go test` con soporte para `-race` desde el inicio.
+- **Estado (2026-09-18):** scaffold mínimo creado en `backend/` (`go.mod`,
+  `main.go` con Gin y un endpoint `GET /healthz`, `Dockerfile` multi-stage
+  verificado localmente). Pendiente: estructura de capas, middleware,
+  `golangci-lint`.
 - **Dependencias:** ninguna.
 
 ### T-02: Setup del repositorio frontend (React + Vite + PWA)
@@ -46,6 +51,10 @@ desarrolladores en las 2 semanas de la Fase 0.
 - Configurar estado global (Zustand o Redux Toolkit, según ADR/arquitectura
   §2.2) con un store vacío de referencia.
 - Configurar ESLint/Prettier y Vitest.
+- **Estado (2026-09-18):** scaffold mínimo creado en `frontend/` (Vite +
+  React + TypeScript, `Dockerfile` multi-stage que sirve el build vía Nginx,
+  verificado localmente con `npm run build`). Pendiente: plugin PWA
+  (manifest, Service Worker), store global, ESLint/Prettier, Vitest.
 - **Dependencias:** ninguna.
 
 ### T-03: Definición y publicación de la OpenAPI spec
@@ -125,6 +134,25 @@ desarrolladores en las 2 semanas de la Fase 0.
 - Documentar cómo levantar el entorno local (docker-compose), y cómo se
   diferencian dev/staging/prod (namespaces, dominios, niveles de logging).
 - **Dependencias:** T-04, T-09.
+
+### T-13: Quality gate de PRs en GitHub Actions
+- Workflow `.github/workflows/quality-checks.yml`, disparado en cada PR
+  hacia `develop`. Cuatro checks requeridos: `Backend build` (`go build`),
+  `Frontend build` (`npm run build`), `Backend Docker image` y
+  `Frontend Docker image` (`docker build` de `backend/Dockerfile` y
+  `frontend/Dockerfile`).
+- Cada check usa un job de detección de cambios (`dorny/paths-filter`) para
+  solo ejecutar la compilación/build real cuando el PR toca `backend/` o
+  `frontend/` respectivamente; si no hay cambios en esa carpeta, el check
+  igual reporta éxito (para no bloquear el merge indefinidamente), pero sin
+  gastar tiempo de CI en algo que no cambió.
+- Es un gate independiente y complementario a T-10 (pipeline de despliegue
+  en `single-iac`): este corre en GitHub Actions sobre cada PR: valida que
+  el código compile y las imágenes construyan antes de fusionar a `develop`;
+  T-10 se encarga del build/despliegue real hacia los entornos.
+- **Estado (2026-09-18):** implementado; pendiente de verificar en el primer
+  PR real hacia `develop`.
+- **Dependencias:** T-01, T-02.
 
 ---
 
