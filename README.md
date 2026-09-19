@@ -5,7 +5,7 @@ gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío
 
 ## Estructura
 
-    cashcastor-docs/
+    mesabank-cash-castor-app/
     ├── README.md
     ├── CHANGELOG.md
     ├── LICENSE
@@ -46,4 +46,6 @@ gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío
 
 - Idioma: español.
 - Formato: Markdown.
-- Ubicación: repositorio Git dedicado (`cashcastor-docs`).
+- Ubicación: repositorio Git dedicado (`mesabank-cash-castor-app`; el nombre
+  del repositorio no refleja el nombre del producto —**CashCastor**— por
+  decisión explícita de mantenerlo así).
