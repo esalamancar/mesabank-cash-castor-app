@@ -92,3 +92,11 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   y `nCrisz`.
 - Documentado el flujo de trabajo de Git y los checks requeridos en
   `README.md`.
+
+### Cambiado
+- El repositorio pasó de privado a **público**: la API de branch
+  protection/rulesets de GitHub rechaza ambas con 403 en repos privados de
+  cuentas personales Free ("Upgrade to GitHub Pro or make this repository
+  public"). Decisión del PO (2026-09-18): pasar a público en vez de pagar
+  el upgrade, dado que el repo aún no tiene código de negocio.
+- Rama por defecto cambiada de `main` a `develop`.
