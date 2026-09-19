@@ -150,8 +150,8 @@ desarrolladores en las 2 semanas de la Fase 0.
   en `single-iac`): este corre en GitHub Actions sobre cada PR: valida que
   el código compile y las imágenes construyan antes de fusionar a `develop`;
   T-10 se encarga del build/despliegue real hacia los entornos.
-- **Estado (2026-09-18):** implementado; pendiente de verificar en el primer
-  PR real hacia `develop`.
+- **Estado (2026-09-18):** implementado y verificado — los 4 checks
+  pasaron en el PR #1 (scaffold inicial de backend/frontend).
 - **Dependencias:** T-01, T-02.
 
 ---
