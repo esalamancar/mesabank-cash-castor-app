@@ -6,8 +6,9 @@ del roadmap (`05-roadmap.md`). Formato: `Como <rol>, quiero <acción>, para
 
 **Convenciones:**
 - **Prioridad (MoSCoW):** Must / Should / Could / Won't (para esta iteración).
-- **Estimación:** S (≤1 día), M (2-3 días), L (4-5 días), a nivel de una
-  historia ya desglosada en tareas técnicas por el equipo.
+- No se asigna estimación de tiempo/esfuerzo por historia: cuánto tarda cada
+  una depende de quién la implemente (herramientas, experiencia), no es una
+  propiedad fija de la historia.
 - Las decisiones del PO tomadas el 2026-09-18 (inflación fuera del MVP, arqueo
   solo por el banco, ranking tipo leaderboard, espectador solo con saldos) se
   marcan explícitamente donde aplican.
@@ -17,7 +18,7 @@ del roadmap (`05-roadmap.md`). Formato: `Como <rol>, quiero <acción>, para
 ## EP-01: Autenticación y Sesión
 
 ### US-001: Registro de usuario
-- **Épica:** EP-01 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-01
+- **Épica:** EP-01 | **Prioridad:** Must | **RF:** RF-01
 
 Como jugador nuevo, quiero registrarme con un usuario y un PIN, para poder
 identificarme en futuras partidas y aparecer en el ranking.
@@ -41,7 +42,7 @@ Escenario: Usuario ya existe
 ---
 
 ### US-002: Login con usuario y PIN
-- **Épica:** EP-01 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-02
+- **Épica:** EP-01 | **Prioridad:** Must | **RF:** RF-02
 
 Como usuario registrado, quiero iniciar sesión con mi usuario y PIN, para
 acceder a mis partidas y mi historial.
@@ -67,7 +68,7 @@ Escenario: PIN incorrecto
 ---
 
 ### US-003: Recuperación de sesión tras desconexión
-- **Épica:** EP-01 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-03
+- **Épica:** EP-01 | **Prioridad:** Must | **RF:** RF-03
 
 Como jugador conectado a una partida, quiero que al perder y recuperar
 conexión (o al reabrir la app) retome automáticamente donde quedé, para no
@@ -94,7 +95,7 @@ Escenario: Sesión expirada
 ---
 
 ### US-004: Acceso como invitado
-- **Épica:** EP-01 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-04
+- **Épica:** EP-01 | **Prioridad:** Must | **RF:** RF-04
 
 Como persona sin cuenta, quiero unirme a una partida como invitado, para
 jugar sin necesidad de registrarme.
@@ -121,7 +122,7 @@ Escenario: Invitado no puede crear partida
 ---
 
 ### US-005: Cierre de sesión
-- **Épica:** EP-01 | **Prioridad:** Should | **Estimación:** S | **RF:** complementaria, sin número en el PRD
+- **Épica:** EP-01 | **Prioridad:** Should | **RF:** complementaria, sin número en el PRD
 
 Como usuario, quiero cerrar sesión explícitamente, para proteger mi cuenta
 en un dispositivo compartido.
@@ -143,7 +144,7 @@ Escenario: Logout exitoso
 ## EP-02: Gestión de Partidas
 
 ### US-010: Crear partida
-- **Épica:** EP-02 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-05, RF-08
+- **Épica:** EP-02 | **Prioridad:** Must | **RF:** RF-05, RF-08
 
 Como usuario registrado, quiero crear una partida configurando su masa
 monetaria inicial, para asumir el rol de Banco y empezar a jugar.
@@ -169,7 +170,7 @@ Escenario: Invitado intenta crear partida
 ---
 
 ### US-011: Generar código, QR y link de invitación
-- **Épica:** EP-02 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-06
+- **Épica:** EP-02 | **Prioridad:** Must | **RF:** RF-06
 
 Como Banco, quiero que mi partida tenga un código corto, un QR y un link,
 para invitar a otros jugadores fácilmente.
@@ -188,7 +189,7 @@ Escenario: Generación automática al crear la partida
 ---
 
 ### US-012: Unirse a partida por código, QR o link
-- **Épica:** EP-02 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-07
+- **Épica:** EP-02 | **Prioridad:** Must | **RF:** RF-07
 
 Como jugador, quiero unirme a una partida existente usando el código, QR o
 link, para participar con el rol de Jugador.
@@ -213,7 +214,7 @@ Escenario: Código inválido o partida finalizada
 ---
 
 ### US-013: Soporte de múltiples partidas simultáneas
-- **Épica:** EP-02 | **Prioridad:** Must | **Estimación:** L | **RF:** RF-09
+- **Épica:** EP-02 | **Prioridad:** Must | **RF:** RF-09
 
 Como sistema, debo soportar múltiples partidas activas al mismo tiempo sin
 que las operaciones de una interfieran con otra, para que distintos grupos
@@ -235,7 +236,7 @@ Escenario: Aislamiento entre partidas
 ---
 
 ### US-014: Reinicio de partida con confirmaciones múltiples
-- **Épica:** EP-02 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-10
+- **Épica:** EP-02 | **Prioridad:** Must | **RF:** RF-10
 
 Como Banco, quiero reiniciar la partida solo después de varias
 confirmaciones, para evitar reinicios accidentales que borren todo el
@@ -265,7 +266,7 @@ Escenario: Reinicio sin confirmaciones suficientes
 ---
 
 ### US-015: Expulsión de jugador en bancarrota
-- **Épica:** EP-02 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-11
+- **Épica:** EP-02 | **Prioridad:** Must | **RF:** RF-11
 
 Como Banco, quiero expulsar a un jugador declarado en bancarrota, para que
 la partida continúe con los jugadores restantes.
@@ -285,7 +286,7 @@ Escenario: Expulsión tras liquidación
 ---
 
 ### US-016: Consultar información de la partida
-- **Épica:** EP-02 | **Prioridad:** Should | **Estimación:** S | **RF:** complementaria a RF-07
+- **Épica:** EP-02 | **Prioridad:** Should | **RF:** complementaria a RF-07
 
 Como participante de una partida, quiero consultar su estado general
 (jugadores conectados, código, estado), para saber si puedo unirme o seguir
@@ -305,7 +306,7 @@ Escenario: Consulta de partida activa
 ---
 
 ### US-017: Unirse a partida como espectador
-- **Épica:** EP-02 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-07 (rol Espectador, PRD §2)
+- **Épica:** EP-02 | **Prioridad:** Must | **RF:** RF-07 (rol Espectador, PRD §2)
 
 Como persona interesada en seguir la partida sin jugar, quiero unirme como
 espectador, para ver el desarrollo sin poder operar.
@@ -328,7 +329,7 @@ Escenario: Unión como espectador
 ## EP-03: Configuración de Partida
 
 ### US-030: Definir masa monetaria total
-- **Épica:** EP-03 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-12
+- **Épica:** EP-03 | **Prioridad:** Must | **RF:** RF-12
 
 Como Banco, quiero definir cuánto dinero digital y cuánto papel moneda
 existen en total en la partida, para controlar la emisión y poder hacer
@@ -352,7 +353,7 @@ Escenario: Configuración incompleta
 ---
 
 ### US-031: Definir asignación inicial por jugador
-- **Épica:** EP-03 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-13
+- **Épica:** EP-03 | **Prioridad:** Must | **RF:** RF-13
 
 Como Banco, quiero definir cuánto dinero digital y papel recibe cada jugador
 al unirse, para que el reparto inicial sea consistente.
@@ -371,7 +372,7 @@ Escenario: Asignación aplicada al unirse
 ---
 
 ### US-032: Definir moneda y tasa de cambio
-- **Épica:** EP-03 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-14
+- **Épica:** EP-03 | **Prioridad:** Must | **RF:** RF-14
 
 Como Banco, quiero elegir la moneda de la partida (USD, COP, EUR o
 personalizada) y su tasa de cambio, para adaptar la partida al contexto de
@@ -394,7 +395,7 @@ Escenario: Moneda personalizada
 ---
 
 ### US-033: Definir fee de transferencia
-- **Épica:** EP-03 | **Prioridad:** Should | **Estimación:** S | **RF:** RF-16
+- **Épica:** EP-03 | **Prioridad:** Should | **RF:** RF-16
 
 Como Banco, quiero definir un fee (comisión) por transferencia, con valor
 por defecto 0, para poder simular costos de transacción si lo deseo.
@@ -419,7 +420,7 @@ Escenario: Fee configurado
 ---
 
 ### US-034: Definir interés por ronda o por tiempo
-- **Épica:** EP-03 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-17
+- **Épica:** EP-03 | **Prioridad:** Must | **RF:** RF-17
 
 Como Banco, quiero definir un porcentaje de interés y su periodicidad (por
 ronda o por tiempo), para aplicar mecánicas de préstamos con interés.
@@ -442,7 +443,7 @@ Escenario: Interés por tiempo
 ---
 
 ### US-035: Definir deuda máxima como múltiplo del valor inicial
-- **Épica:** EP-03 | **Prioridad:** Should | **Estimación:** S | **RF:** RF-18
+- **Épica:** EP-03 | **Prioridad:** Should | **RF:** RF-18
 
 Como Banco, quiero limitar la deuda máxima de un jugador a un múltiplo de su
 valor inicial, para evitar endeudamiento ilimitado.
@@ -465,7 +466,7 @@ Escenario: Préstamo que excede el límite
 ---
 
 ### US-036: Guardar valor de inflación (informativo, sin efecto funcional)
-- **Épica:** EP-03 | **Prioridad:** Could | **Estimación:** S | **RF:** RF-15 (alcance reducido)
+- **Épica:** EP-03 | **Prioridad:** Could | **RF:** RF-15 (alcance reducido)
 
 Como Banco, quiero poder registrar un valor de inflación en la configuración
 de la partida, para dejar constancia de la intención aunque el MVP todavía
@@ -492,7 +493,7 @@ Escenario: Guardar inflación sin efecto
 ## EP-04: Operaciones Financieras
 
 ### US-050: Transferencia P2P idempotente
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** L | **RF:** RF-19
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-19
 
 Como jugador, quiero transferir dinero digital a otro jugador de forma
 instantánea, para pagar rentas u otras obligaciones del juego sin usar papel
@@ -530,7 +531,7 @@ Escenario: Jugadores de partidas distintas
 ---
 
 ### US-051: Consignación de papel moneda a cuenta digital
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-20
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-20
 
 Como jugador, quiero consignar papel moneda físico a mi cuenta digital, para
 poder operar digitalmente con dinero que tenía en efectivo.
@@ -556,7 +557,7 @@ Escenario: Consignación mayor al papel disponible
 ---
 
 ### US-052: Préstamo del banco a jugador
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-21
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-21
 
 Como Banco, quiero otorgar un préstamo a un jugador con monto, interés y
 plazo, para permitirle seguir jugando cuando no tiene liquidez.
@@ -576,7 +577,7 @@ Escenario: Préstamo otorgado
 ---
 
 ### US-053: Pago automático de intereses
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** L | **RF:** RF-22
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-22
 
 Como jugador con un préstamo activo, quiero que el interés se calcule y
 aplique automáticamente según la configuración de la partida, para no tener
@@ -598,7 +599,7 @@ Escenario: Interés aplicado automáticamente
 ---
 
 ### US-054: Registro de deuda con el banco
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-23
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-23
 
 Como Banco, quiero que la deuda de un jugador se refleje como saldo negativo
 contable, para tener visibilidad clara de quién debe y cuánto.
@@ -616,7 +617,7 @@ Escenario: Deuda visible
 ---
 
 ### US-055: Liquidación de bancarrota
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-24
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-24
 
 Como Banco, quiero iniciar la liquidación de un jugador en bancarrota, para
 que sus acreedores reciban pago inmediato y el jugador quede fuera de la
@@ -640,7 +641,7 @@ Escenario: Liquidación exitosa
 ---
 
 ### US-056: Arqueo de caja en tiempo real (declaración del Banco)
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-25
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-25
 
 Como Banco, quiero declarar cuánto papel moneda tengo físicamente en caja y
 cuánto estimo que tiene cada jugador, para comparar contra la masa monetaria
@@ -673,7 +674,7 @@ Escenario: Arqueo descuadrado
 ---
 
 ### US-057: Historial de ingresos y egresos por jugador
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-26
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-26
 
 Como jugador, quiero ver mi propio historial de ingresos y egresos, para
 llevar control de mis movimientos durante la partida.
@@ -693,7 +694,7 @@ Escenario: Consulta de historial propio
 ---
 
 ### US-058: Auditoría completa para el Banco
-- **Épica:** EP-04 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-27
+- **Épica:** EP-04 | **Prioridad:** Must | **RF:** RF-27
 
 Como Banco, quiero ver el registro completo de todas las operaciones de la
 partida, para poder resolver disputas y verificar la integridad del juego.
@@ -716,7 +717,7 @@ Escenario: Consulta de auditoría
 ## EP-05: Tiempo Real y Turnos
 
 ### US-080: Sincronización en tiempo real vía WebSocket
-- **Épica:** EP-05 | **Prioridad:** Must | **Estimación:** L | **RF:** RF-28
+- **Épica:** EP-05 | **Prioridad:** Must | **RF:** RF-28
 
 Como jugador o espectador conectado a una partida, quiero ver los cambios de
 saldo y estado en tiempo real sin refrescar la app, para seguir el juego de
@@ -744,7 +745,7 @@ Escenario: Reconexión de WebSocket
 ---
 
 ### US-081: Asignación y avance de turnos
-- **Épica:** EP-05 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-29
+- **Épica:** EP-05 | **Prioridad:** Must | **RF:** RF-29
 
 Como Banco, quiero gestionar de quién es el turno desde la app, para que el
 sistema sepa cuándo aplicar el interés por ronda.
@@ -766,7 +767,7 @@ Escenario: Avanzar turno
 ---
 
 ### US-082: Cálculo de interés por ronda
-- **Épica:** EP-05 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-30
+- **Épica:** EP-05 | **Prioridad:** Must | **RF:** RF-30
 
 Como jugador con deuda activa, quiero que el interés por ronda se calcule
 automáticamente cuando el turno vuelve a mí, para que el juego siga las
@@ -786,7 +787,7 @@ Escenario: Interés aplicado al volver el turno
 ---
 
 ### US-083: Cálculo de interés por tiempo
-- **Épica:** EP-05 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-31
+- **Épica:** EP-05 | **Prioridad:** Must | **RF:** RF-31
 
 Como jugador con deuda activa, quiero que el interés por tiempo se calcule
 automáticamente cada N minutos configurados, para partidas donde no se sigue
@@ -807,7 +808,7 @@ Escenario: Interés aplicado por temporizador
 ---
 
 ### US-084: Vista de espectador (solo saldos en vivo)
-- **Épica:** EP-05 | **Prioridad:** Must | **Estimación:** S | **RF:** complementaria a RF-28 (rol Espectador, PRD §2)
+- **Épica:** EP-05 | **Prioridad:** Must | **RF:** complementaria a RF-28 (rol Espectador, PRD §2)
 
 Como espectador, quiero ver los saldos de los jugadores actualizarse en
 tiempo real, para seguir el estado económico de la partida sin operar.
@@ -835,7 +836,7 @@ Escenario: Espectador sin acceso a historial detallado
 ## EP-06: Ranking y Puntuación
 
 ### US-100: Cálculo de puntuación final de partida
-- **Épica:** EP-06 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-32
+- **Épica:** EP-06 | **Prioridad:** Must | **RF:** RF-32
 
 Como jugador registrado, quiero que al finalizar la partida se calcule mi
 puntuación, para saber cómo me fue.
@@ -854,7 +855,7 @@ Escenario: Cálculo al finalizar
 ---
 
 ### US-101: Leaderboard global de mejores partidas
-- **Épica:** EP-06 | **Prioridad:** Must | **Estimación:** M | **RF:** RF-33
+- **Épica:** EP-06 | **Prioridad:** Must | **RF:** RF-33
 
 Como usuario registrado, quiero ver un ranking global con las mejores
 puntuaciones de partidas jugadas, para comparar mi desempeño con el de otros
@@ -883,7 +884,7 @@ Escenario: Sin acumulación entre partidas
 ---
 
 ### US-102: Exclusión de invitados del ranking
-- **Épica:** EP-06 | **Prioridad:** Must | **Estimación:** S | **RF:** RF-34
+- **Épica:** EP-06 | **Prioridad:** Must | **RF:** RF-34
 
 Como sistema, no debo incluir a jugadores invitados en el ranking global,
 para que el ranking refleje solo a usuarios con cuenta registrada.
@@ -903,7 +904,7 @@ Escenario: Invitado finaliza partida con buena puntuación
 ## EP-07: Administración (baja prioridad, no bloqueante para el MVP)
 
 ### US-110: Gestión de monedas soportadas
-- **Épica:** EP-07 | **Prioridad:** Could | **Estimación:** M | **RF:** sin número (PRD §2, rol Admin general)
+- **Épica:** EP-07 | **Prioridad:** Could | **RF:** sin número (PRD §2, rol Admin general)
 
 Como Admin general, quiero ver y editar la lista de monedas soportadas por
 la aplicación, para mantenerla actualizada sin necesidad de un despliegue.
@@ -923,7 +924,7 @@ Escenario: Agregar moneda soportada
 ---
 
 ### US-111: Gestión de parámetros globales por defecto
-- **Épica:** EP-07 | **Prioridad:** Could | **Estimación:** S | **RF:** sin número (PRD §2, rol Admin general)
+- **Épica:** EP-07 | **Prioridad:** Could | **RF:** sin número (PRD §2, rol Admin general)
 
 Como Admin general, quiero definir valores por defecto (fee, interés,
 duración de sesión) a nivel de aplicación, para no tener que repetirlos en

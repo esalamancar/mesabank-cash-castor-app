@@ -100,3 +100,9 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   public"). Decisión del PO (2026-09-18): pasar a público en vez de pagar
   el upgrade, dado que el repo aún no tiene código de negocio.
 - Rama por defecto cambiada de `main` a `develop`.
+- Se quitaron las estimaciones de tiempo/esfuerzo de `10-backlog-sprint-0.md`
+  (días-persona) y `07-historias-usuario.md` (S/M/L). Decisión del PO
+  (2026-09-19): cuánto tarda una tarea depende de quién la haga
+  (herramientas, experiencia), no es una propiedad fija de la tarea —
+  distinto de estimar costo. Se conserva el orden de dependencia (backlog)
+  y la prioridad MoSCoW (historias), que sí son decisiones de negocio.
