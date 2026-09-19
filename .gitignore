@@ -12,6 +12,12 @@ node_modules/
 dist/
 build/
 
+# Go
+/backend/backend
+/backend/cmd/*/main
+*.exe
+*.test
+
 # Entorno
 .env
 .env.local
