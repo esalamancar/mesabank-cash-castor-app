@@ -1,4 +1,4 @@
-# PRD: MesaBank MVP
+# PRD: CashCastor MVP
 
 ## 1. Objetivo del Producto
 Digitalizar la gestión de la caja del banco en juegos de mesa económicos,

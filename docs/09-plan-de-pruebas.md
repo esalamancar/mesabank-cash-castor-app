@@ -1,4 +1,4 @@
-# Plan de Pruebas: MesaBank MVP
+# Plan de Pruebas: CashCastor MVP
 
 Estrategia de testing para el backend (Go + Gin), el frontend (React + Vite
 PWA) y el flujo end-to-end del sistema completo, alineada con las historias

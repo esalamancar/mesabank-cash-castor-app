@@ -1,4 +1,4 @@
-# Épicas: MesaBank MVP
+# Épicas: CashCastor MVP
 
 Épicas derivadas del PRD (`02-prd.md`), agrupadas por bloque funcional. Cada
 épica lista los requisitos funcionales (RF-xx) que cubre, criterios de
