@@ -31,9 +31,17 @@
    correspondencia con CashCastor en la sección 4 del mismo documento (borrador
    de fase 2, aún sin implementar).
 2. ¿El banco debe poder emitir dinero de emergencia? (Actualmente: no).
-3. ¿Cómo se maneja la inflación exactamente? ¿Afecta a los precios de las
-   propiedades o solo al valor del dinero?
-4. ¿Los espectadores pueden ver el historial de transacciones o solo saldos?
+3. ~~¿Cómo se maneja la inflación exactamente? ¿Afecta a los precios de las
+   propiedades o solo al valor del dinero?~~ **RESUELTA (2026-09-18):** queda
+   fuera del MVP por completo; no se implementa ninguna lógica automática
+   (ni sobre precios, ni tasa de cambio, ni saldos). Se requiere un POC
+   jugando una ronda real antes de definir el mecanismo — ver
+   `07-historias-usuario.md` (US-036, US-201) y la nota relacionada con las
+   cotizaciones de Tío Rico en `11-reglamento-juegos.md`, sección 4.
+4. ~~¿Los espectadores pueden ver el historial de transacciones o solo
+   saldos?~~ **RESUELTA (2026-09-18):** solo ven saldos en vivo, sin acceso
+   al historial detallado de transacciones. Ver `07-historias-usuario.md`
+   (US-084, US-207).
 5. ¿Se requiere un modo de solo papel moneda (sin digital)?
 6. ¿La app debe integrarse con el tablero físico de alguna manera (NFC, QR en
    casillas)?

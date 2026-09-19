@@ -835,7 +835,9 @@ components:
 
     User:
       type: object
-      description: Corresponde a la entidad `User` del PRD §5.
+      description: >
+        Representación pública de la entidad `User` del PRD §5. No incluye
+        `pin_hash`: ese campo nunca se expone vía API (RNF-06).
       properties:
         id:
           type: string
@@ -850,7 +852,10 @@ components:
 
     Game:
       type: object
-      description: Corresponde a la entidad `Game` del PRD §5.
+      description: >
+        Corresponde a la entidad `Game` del PRD §5, con una diferencia
+        intencional: el campo `config_json` del PRD se expone aquí como
+        `config`, un objeto `GameConfig` estructurado en lugar de JSON crudo.
       properties:
         id:
           type: string
