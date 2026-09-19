@@ -1,0 +1,100 @@
+name: Quality Checks
+
+on:
+  pull_request:
+    branches: [develop]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+
+  backend-build:
+    name: Backend build
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.changes.outputs.backend == 'true'
+      - uses: actions/setup-go@v5
+        if: needs.changes.outputs.backend == 'true'
+        with:
+          go-version: '1.22'
+      - name: go build
+        if: needs.changes.outputs.backend == 'true'
+        working-directory: backend
+        run: go build ./...
+      - name: Sin cambios en backend/
+        if: needs.changes.outputs.backend != 'true'
+        run: echo "No hay cambios en backend/, se omite el build."
+
+  frontend-build:
+    name: Frontend build
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.changes.outputs.frontend == 'true'
+      - uses: actions/setup-node@v4
+        if: needs.changes.outputs.frontend == 'true'
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      - name: npm ci
+        if: needs.changes.outputs.frontend == 'true'
+        working-directory: frontend
+        run: npm ci
+      - name: npm run build
+        if: needs.changes.outputs.frontend == 'true'
+        working-directory: frontend
+        run: npm run build
+      - name: Sin cambios en frontend/
+        if: needs.changes.outputs.frontend != 'true'
+        run: echo "No hay cambios en frontend/, se omite el build."
+
+  backend-docker:
+    name: Backend Docker image
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.changes.outputs.backend == 'true'
+      - name: docker build
+        if: needs.changes.outputs.backend == 'true'
+        working-directory: backend
+        run: docker build -t cashcastor-api:ci .
+      - name: Sin cambios en backend/
+        if: needs.changes.outputs.backend != 'true'
+        run: echo "No hay cambios en backend/, se omite el build de imagen."
+
+  frontend-docker:
+    name: Frontend Docker image
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        if: needs.changes.outputs.frontend == 'true'
+      - name: docker build
+        if: needs.changes.outputs.frontend == 'true'
+        working-directory: frontend
+        run: docker build -t cashcastor-web:ci .
+      - name: Sin cambios en frontend/
+        if: needs.changes.outputs.frontend != 'true'
+        run: echo "No hay cambios en frontend/, se omite el build de imagen."
