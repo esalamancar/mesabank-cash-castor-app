@@ -1,6 +1,6 @@
 # Reglamento de Juegos: Tío Rico y Monopoly
 
-> Documento de referencia para el diseño de reglas de negocio en MesaBank.
+> Documento de referencia para el diseño de reglas de negocio en CashCastor.
 > Fuentes: reglamentos oficiales de Parker Brothers / Hasbro y material de
 > referencia de Tío Rico (Rich Uncle).
 
@@ -335,9 +335,9 @@ pagar, ya sea a otro jugador o al Banco.
 
 ---
 
-## 3. Correspondencia con MesaBank
+## 3. Correspondencia con CashCastor
 
-| Regla del juego | Funcionalidad en MesaBank |
+| Regla del juego | Funcionalidad en CashCastor |
 |-----------------|---------------------------|
 | Dinero inicial fijo | Configuración de masa monetaria inicial (digital + papel) |
 | Pago de rentas | Transferencias P2P automáticas o manuales |
@@ -363,7 +363,7 @@ adelantar el trabajo de fase 2, pero requiere validación del PO y del POC de
 mecánicas económicas antes de convertirse en RF o historias de usuario (ver
 `07-historias-usuario.md`, US-200 y US-201).
 
-| Regla de Tío Rico | Propuesta de correspondencia en MesaBank | Notas |
+| Regla de Tío Rico | Propuesta de correspondencia en CashCastor | Notas |
 |---|---|---|
 | Título de acción (Stock Card) en posesión de un jugador | Nueva entidad `Stock` / `PlayerStock` (no existe en el modelo actual de PRD §5) | El modelo de datos del MVP (`Player`, `Loan`) no representa "activos" poseídos; se necesita una tabla nueva. |
 | Compra de una acción al Banco cuando sale su número en el dado y está en manos del Banco | Transacción tipo `stock_purchase`: débito al jugador según la cotización vigente, transferencia del título Banco → jugador | Requiere una tabla `StockQuotation` con el precio vigente por acción, actualizable. |
@@ -373,9 +373,9 @@ mecánicas económicas antes de convertirse en RF o historias de usuario (ver
 | Doble: se pesca una carta de "La Trombetta" con instrucciones (a veces con monto determinado por los dados) | Evento aleatorio configurable (`EventCard`), con efecto sobre saldo o cotización | Comparable a las cartas de Fortuna/Arca Comunal de Monopoly (sección 2.10); podrían compartir un mismo mecanismo de "cartas de evento" en fase 2. |
 | Venta de un título al Banco (máximo 1 por turno, salvo excepción por deuda) | Transacción tipo `stock_sale`: el jugador cede el título al Banco y recibe efectivo según cotización vigente | La excepción "vender todos los títulos necesarios para cubrir deuda" es análoga al flujo de liquidación (RF-24, US-055): vender activos antes de declarar bancarrota. |
 | Bancarrota: no puede cubrir su deuda tras vender todos sus títulos | Reutiliza el mecanismo de liquidación existente (RF-24, US-055), sustituyendo "propiedades" por "acciones" como el activo a liquidar | No requiere una historia nueva, solo generalizar la liquidación para operar sobre `Stock` además de saldo. |
-| Fin del juego al alcanzar $50,000/$100,000 en efectivo | Nueva condición de fin de partida por "meta de patrimonio", alternativa a la finalización manual actual (`POST /games/{code}/finish`, US-100) | MesaBank hoy solo modela cierre manual por el Banco; una meta automática de patrimonio es una historia nueva, no cubierta por EP-06 tal como está. |
+| Fin del juego al alcanzar $50,000/$100,000 en efectivo | Nueva condición de fin de partida por "meta de patrimonio", alternativa a la finalización manual actual (`POST /games/{code}/finish`, US-100) | CashCastor hoy solo modela cierre manual por el Banco; una meta automática de patrimonio es una historia nueva, no cubierta por EP-06 tal como está. |
 
-**Piezas de MesaBank que Tío Rico reutiliza sin cambios:** transferencias P2P
+**Piezas de CashCastor que Tío Rico reutiliza sin cambios:** transferencias P2P
 (US-050), consignación papel↔digital (US-051), arqueo de caja (US-056),
 historial y auditoría (US-057/US-058), sincronización en tiempo real
 (US-080), turnos (US-081).

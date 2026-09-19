@@ -10,7 +10,7 @@
    cada doble, y victoria por acumular $50,000 (o $100,000) en efectivo — no
    por ser el último jugador no quebrado, como en Monopoly. Su mecánica
    central (acciones, dividendos, cotizaciones) no mapea directamente a los
-   conceptos actuales de MesaBank (Loan, liquidación de propiedades). La
+   conceptos actuales de CashCastor (Loan, liquidación de propiedades). La
    implementación específica de estas reglas se pospone a fase 2; hay una
    propuesta inicial de correspondencia (borrador, no implementada en el MVP)
    en `docs/11-reglamento-juegos.md`, sección 4.
@@ -28,7 +28,7 @@
    bancarrota?~~ **RESUELTA (2026-09-18):** Tío Rico no tiene hipotecas, rentas
    ni subastas; su mecánica es de acciones y dividendos. Ver el reglamento
    completo en `docs/11-reglamento-juegos.md`, sección 1, y la propuesta de
-   correspondencia con MesaBank en la sección 4 del mismo documento (borrador
+   correspondencia con CashCastor en la sección 4 del mismo documento (borrador
    de fase 2, aún sin implementar).
 2. ¿El banco debe poder emitir dinero de emergencia? (Actualmente: no).
 3. ¿Cómo se maneja la inflación exactamente? ¿Afecta a los precios de las

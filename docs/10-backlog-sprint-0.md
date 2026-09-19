@@ -1,4 +1,4 @@
-# Backlog Sprint 0: Fundaciones — MesaBank
+# Backlog Sprint 0: Fundaciones — CashCastor
 
 Tareas técnicas de la Fase 0 del roadmap (`05-roadmap.md`, Semana 1-2),
 ordenadas por dependencia. No son historias de usuario funcionales, sino
@@ -100,11 +100,11 @@ desarrolladores en las 2 semanas de la Fase 0.
   el día 1 de la Fase 0.
 
 ### T-09: Manifiestos de Kubernetes
-- Namespace `mesabank` (arquitectura §2.4).
+- Namespace `cashcastor` (arquitectura §2.4).
 - ConfigMaps y Secrets para configuración de la app y credenciales de DB,
   siguiendo el formato acordado en T-08.
-- Manifiestos base de `Deployment`/`Service` para `mesabank-api` y
-  `mesabank-web` (sin CI/CD todavía, aplicables manualmente para pruebas).
+- Manifiestos base de `Deployment`/`Service` para `cashcastor-api` y
+  `cashcastor-web` (sin CI/CD todavía, aplicables manualmente para pruebas).
 - **Dependencias:** T-08.
 
 ### T-10: Pipeline de CI/CD base

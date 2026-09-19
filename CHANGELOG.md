@@ -25,7 +25,7 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
 - Backlog técnico de Sprint 0 con tareas de fundación ordenadas por
   dependencia (`10-backlog-sprint-0.md`).
 - Reglamento de referencia de Tío Rico (Rich Uncle) y Monopoly, con tabla de
-  correspondencia con conceptos de MesaBank y una propuesta inicial de
+  correspondencia con conceptos de CashCastor y una propuesta inicial de
   correspondencia específica para Tío Rico (borrador de fase 2)
   (`11-reglamento-juegos.md`).
 
@@ -40,6 +40,10 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   Rico con mecánicas de Monopoly (hipotecas, rentas, subastas) y citaba la
   pregunta abierta #1 como pendiente. Se actualizó para reflejar las reglas
   reales (acciones, dividendos, cotizaciones) y su cierre.
+- Se corrigió el nombre del producto en toda la documentación: la aplicación
+  no se llama "MesaBank", se llama **CashCastor**. Se reemplazó en todos los
+  archivos, incluyendo nombres técnicos derivados (namespace de Kubernetes,
+  Deployments `*-api`/`*-web`, dominios de ejemplo del OpenAPI).
 
 ### Decisiones de alcance (PO, 2026-09-18)
 - La lógica funcional de inflación (RF-15) queda fuera del MVP; se requiere

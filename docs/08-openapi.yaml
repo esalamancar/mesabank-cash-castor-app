@@ -1,9 +1,9 @@
 openapi: 3.1.0
 info:
-  title: MesaBank API
+  title: CashCastor API
   version: "0.1.0"
   description: >
-    API del MVP de MesaBank. Backend en Go + Gin, expuesto vía HTTPS con
+    API del MVP de CashCastor. Backend en Go + Gin, expuesto vía HTTPS con
     autenticación JWT Bearer. Además de los endpoints REST documentados aquí,
     la API expone un canal de tiempo real por WebSocket en
     `wss://{host}/games/{code}/ws` (ver `03-arquitectura.md`).
@@ -28,9 +28,9 @@ info:
     email: easalamancar@siesa.com
 
 servers:
-  - url: https://api.mesabank.example.com/v1
+  - url: https://api.cashcastor.example.com/v1
     description: Producción (placeholder, pendiente de definir dominio real)
-  - url: https://staging-api.mesabank.example.com/v1
+  - url: https://staging-api.cashcastor.example.com/v1
     description: Staging
 
 tags:

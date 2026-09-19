@@ -1,4 +1,4 @@
-# Arquitectura: MesaBank
+# Arquitectura: CashCastor
 
 ## 1. Visión General
 Arquitectura de microservicio monolítico modular, desplegada en Kubernetes. El
@@ -62,8 +62,8 @@ sesiones, caché y pub/sub para WebSockets.
   - Caché de saldos y arqueos (invalidación por evento).
 
 ### 2.4 Infraestructura (Kubernetes)
-- Namespace: `mesabank`.
-- Deployments: `mesabank-api` (Go), `mesabank-web` (Nginx + estáticos).
+- Namespace: `cashcastor`.
+- Deployments: `cashcastor-api` (Go), `cashcastor-web` (Nginx + estáticos).
 - Services: ClusterIP para API y web.
 - Ingress: Nginx Ingress con TLS (cert-manager).
 - StatefulSets: PostgreSQL (o uso de operador), Redis (o servicio gestionado).

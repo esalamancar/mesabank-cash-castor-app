@@ -1,11 +1,11 @@
-# MesaBank — Documentación BMAD
+# CashCastor — Documentación BMAD
 
-Documentación inicial (MVP) para **MesaBank**, una aplicación web que digitaliza la
+Documentación inicial (MVP) para **CashCastor**, una aplicación web que digitaliza la
 gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío Rico.
 
 ## Estructura
 
-    mesabank-docs/
+    cashcastor-docs/
     ├── README.md
     ├── CHANGELOG.md
     ├── LICENSE
@@ -46,4 +46,4 @@ gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío
 
 - Idioma: español.
 - Formato: Markdown.
-- Ubicación: repositorio Git dedicado (`mesabank-docs`).
+- Ubicación: repositorio Git dedicado (`cashcastor-docs`).

@@ -1,7 +1,7 @@
-# Product Brief: MesaBank
+# Product Brief: CashCastor
 
 ## Executive Summary
-MesaBank es una aplicación web que digitaliza la gestión de la caja del banco en
+CashCastor es una aplicación web que digitaliza la gestión de la caja del banco en
 juegos de mesa económicos como Monopoly y Tío Rico. No reemplaza el papel moneda;
 lo complementa. El banco de la partida (un jugador con rol de árbitro) administra
 una masa monetaria fija, dividida entre dinero digital y papel moneda. Los jugadores

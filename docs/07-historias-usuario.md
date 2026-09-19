@@ -1,4 +1,4 @@
-# Historias de Usuario: MesaBank MVP
+# Historias de Usuario: CashCastor MVP
 
 Historias derivadas de las épicas en `06-epicas.md`, cubriendo las fases 1 a 5
 del roadmap (`05-roadmap.md`). Formato: `Como <rol>, quiero <acción>, para
@@ -951,7 +951,7 @@ para dejar constancia de que no se olvidaron sino que se decidió posponerlas.
 
 | ID | Descripción | Motivo |
 |----|-------------|--------|
-| US-200 | Reglas específicas de Tío Rico: compra/venta de acciones, dividendos por coincidencia de dado, cambios de cotización y cartas de "La Trombetta" en los dobles, y condición de victoria por patrimonio ($50,000/$100,000) | **Actualizado 2026-09-18:** ya no es una pregunta abierta — las reglas están documentadas en `11-reglamento-juegos.md` (sección 1) y su correspondencia propuesta con MesaBank en la sección 4 (borrador). No se implementa en el MVP: requiere entidades nuevas (`Stock`, `StockQuotation`) y una condición de fin de partida por meta de patrimonio que no existen hoy. |
+| US-200 | Reglas específicas de Tío Rico: compra/venta de acciones, dividendos por coincidencia de dado, cambios de cotización y cartas de "La Trombetta" en los dobles, y condición de victoria por patrimonio ($50,000/$100,000) | **Actualizado 2026-09-18:** ya no es una pregunta abierta — las reglas están documentadas en `11-reglamento-juegos.md` (sección 1) y su correspondencia propuesta con CashCastor en la sección 4 (borrador). No se implementa en el MVP: requiere entidades nuevas (`Stock`, `StockQuotation`) y una condición de fin de partida por meta de patrimonio que no existen hoy. |
 | US-201 | Lógica funcional de inflación (afectar precios de propiedades, tasa de cambio o saldos digitales) | **Decisión del PO (2026-09-18):** requiere un POC jugando una ronda real antes de definir el mecanismo; no se implementa en el MVP (ver US-036). |
 | US-202 | Modo offline con cola de operaciones pendientes de sincronizar | Exclusión explícita del brief (Scope MVP, fase 2). El Service Worker del MVP solo cachea assets estáticos (ADR-006). |
 | US-203 | Pagos con dinero real / integración con pasarelas de pago | Exclusión explícita del brief (Scope MVP, fase 2). |
