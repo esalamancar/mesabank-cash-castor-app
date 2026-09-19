@@ -44,6 +44,19 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   no se llama "MesaBank", se llama **CashCastor**. Se reemplazó en todos los
   archivos, incluyendo nombres técnicos derivados (namespace de Kubernetes,
   Deployments `*-api`/`*-web`, dominios de ejemplo del OpenAPI).
+- `README.md`: el árbol de estructura y "Convenciones" referían al repo como
+  `cashcastor-docs`, mientras el repositorio real es `mesabank-cash-castor-app`.
+  Se corrigió y se documentó explícitamente por qué el nombre del repo no
+  coincide con el del producto.
+- `supuestos-y-preguntas-abiertas.md`: las preguntas abiertas #3 (inflación)
+  y #4 (espectadores) seguían listadas como sin resolver, pero ya habían
+  sido decididas por el PO (ver "Decisiones de alcance" abajo). Se marcaron
+  como resueltas con referencia a las historias correspondientes.
+- `08-openapi.yaml`: los schemas `User` y `Game` no dejaban explícito que
+  difieren intencionalmente del modelo de datos del PRD §5 (`User` omite
+  `pin_hash` por seguridad; `Game.config` expone un objeto `GameConfig`
+  estructurado en vez del `config_json` crudo del PRD). Se documentó la
+  diferencia en la descripción de cada schema.
 
 ### Decisiones de alcance (PO, 2026-09-18)
 - La lógica funcional de inflación (RF-15) queda fuera del MVP; se requiere
