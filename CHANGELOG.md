@@ -123,3 +123,32 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
 - `README.md` actualizado: equipo de desarrollo (antes "por definir"),
   árbol de estructura completo (`backend/`, `frontend/`, `backlog/`,
   `.github/`, que faltaban desde que se agregaron).
+
+## [Unreleased] (continuación 2)
+
+### Añadido
+- Git-flow formal de 3 ramas: `develop → qa → prod`. Solo `develop` recibe
+  código nuevo (vía PR de los devs); `qa` y `prod` son ramas de promoción
+  (solo reciben merges desde la rama anterior en la cadena, nunca código
+  directo). Las tres protegidas igual: sin push directo, sin force-push,
+  sin borrado, PR obligatorio, 1 aprobación de code owner (`@esalamancar`,
+  el único que revisa/aprueba), y los mismos checks de CI obligatorios.
+- Check de CI `Branch name convention`: falla el PR si la rama origen no
+  sigue el patrón `tipo/descripcion-en-kebab-case` (tipos: `feature`, `fix`,
+  `chore`, `docs`, `refactor`, `test`, `hotfix`). Se agrega como check
+  obligatorio en las tres rulesets.
+
+### Cambiado
+- Se retiró la rama `main` (su historia ya estaba completa dentro de
+  `develop`; no se perdió nada). `develop` sigue siendo la rama por defecto.
+- Se eliminó la rama `front`, creada sin seguir la convención de nombres
+  (sin commits propios, no se perdió trabajo).
+
+### Corregido / Limitación de plan encontrada
+- La regla nativa de GitHub para forzar nombres de rama
+  (`branch_name_pattern`) requiere GitHub Team/Enterprise — no está
+  disponible en el plan Free ni siquiera en repos públicos (a diferencia de
+  `pull_request`/`required_status_checks`, que sí funcionan en público).
+  Se resolvió con el check de CI `Branch name convention` en vez de la
+  regla nativa: mismo efecto práctico (bloquea el merge), sin necesidad de
+  upgrade de plan.
