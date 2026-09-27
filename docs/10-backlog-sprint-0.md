@@ -110,6 +110,12 @@ paralelizar entre el equipo disponible.
   mano) para consumir los endpoints.
 - Cliente WebSocket nativo con reconexión automática (soporta US-003,
   US-080).
+- **Estado (2026-09-27): Hecho** (`frontend/src/api`, `frontend/src/ws`) —
+  cliente HTTP tipado a mano (`types.ts`, `client.ts` con manejo de
+  `ApiError`, `auth.ts`, `games.ts`) para los endpoints de EP-01/EP-02
+  (alcance de Sprint 1); `GameSocket` con reconexión por backoff
+  exponencial. No depende de T-03 en la práctica (se escribió a mano, no
+  generado desde la spec), así que no bloquea a Aleja/Andrety.
 - **Dependencias:** T-02, T-03.
 
 ### T-08: Coordinación con `single-iac`

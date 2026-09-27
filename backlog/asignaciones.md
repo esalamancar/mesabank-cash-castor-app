@@ -32,7 +32,7 @@ Sprint 0 está al final de este archivo.
 | T-04 | Erick | En progreso — `docker-compose.yml` listo, sin verificar levantado (permiso de Docker) |
 | T-05 | Erick | En progreso — modelos GORM y flag `--migrations-only` listos; falta seed de datos |
 | T-06 | Erick | Hecho |
-| T-07 | Erick | Por hacer — depende de T-02, T-03 |
+| T-07 | Erick | Hecho |
 | T-08 | Erick | Por hacer — mayor riesgo de calendario (depende de un equipo externo); prioridad |
 | T-09 | Erick | Por hacer — depende de T-08 |
 | T-10 | Erick | Por hacer — depende de T-01, T-02, T-08, T-09 |
@@ -135,9 +135,10 @@ US-035, luego US-033 y luego US-005 (todas Should).
 
 ### Riesgos
 
-- El frontend depende de **T-02 (store) y T-07 (cliente API)**, que siguen
-  sin hacer (Erick). Si no están en la semana 1, Aleja y Andrety trabajan
-  contra mocks.
+- ~~El frontend depende de T-02 (store) y T-07 (cliente API)~~ **Resuelto
+  (2026-09-27):** ambas listas (`frontend/src/store`,
+  `frontend/src/api`, `frontend/src/ws`). Aleja y Andrety ya pueden
+  consumirlas desde la semana 1, sin mocks.
 - US-005 necesita Redis (T-04), que todavía no se ha verificado levantado.
 
 Historias, criterios en Gherkin y notas técnicas:
@@ -168,7 +169,8 @@ Todavía sin asignar.
 
 ## Pendiente de Sprint 0 (a cargo de Erick)
 
-Actualizado 2026-09-27. Hechas: `T-01`, `T-02`, `T-06`, `T-11`, `T-13`. En
+Actualizado 2026-09-27. Hechas: `T-01`, `T-02`, `T-06`, `T-07`, `T-11`,
+`T-13`. En
 progreso: `T-04`, `T-05`. `T-08/T-09/T-10` delegadas al agente de
 `single-iac` (mismo dueño, Erick, por ser tema de arquitectura — no es
 coordinación con otro equipo).
@@ -181,8 +183,6 @@ coordinación con otro equipo).
 - **T-05** (migraciones): modelos GORM de las 7 entidades y flag
   `--migrations-only` listos (ADR-008); falta el seed de datos de
   desarrollo.
-- **T-07** (cliente API + WebSocket del frontend): sin empezar, depende de
-  T-02/T-03.
 - **T-08 / T-09 / T-10** (convenciones, manifiestos K8s, pipeline CI/CD de
   `single-iac`): delegadas al agente de `single-iac`, esperando respuesta.
 - **T-12** (documentación de entornos local/dev/staging/prod): sin

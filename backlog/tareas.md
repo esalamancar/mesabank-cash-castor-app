@@ -37,7 +37,7 @@ Detalle completo de cada una en `docs/10-backlog-sprint-0.md`.
 | T-04 | Setup de PostgreSQL y Redis en local/desarrollo | En progreso — `docker-compose.yml` listo (sintaxis validada, no se pudo levantar en este entorno por permisos de Docker) |
 | T-05 | Modelo de datos y migraciones iniciales | En progreso — modelos GORM de las 7 entidades y flag `--migrations-only` listos (ADR-008); falta seed de datos de desarrollo |
 | T-06 | Esqueleto de capas backend | Hecho — 28 rutas del OpenAPI como stubs, middleware de auth (placeholder), hub de WebSocket base |
-| T-07 | Cliente API + WebSocket base en el frontend | Por hacer |
+| T-07 | Cliente API + WebSocket base en el frontend | Hecho — cliente tipado (auth/games) y `GameSocket` con reconexión |
 | T-08 | Coordinación con `single-iac` | Por hacer |
 | T-09 | Manifiestos de Kubernetes | Por hacer |
 | T-10 | Pipeline de CI/CD base en `single-iac` | Por hacer |

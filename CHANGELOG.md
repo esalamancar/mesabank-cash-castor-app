@@ -244,3 +244,13 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
 - `jsdom@30` (recién publicado al momento de instalar) tiene un bug real
   de interoperabilidad ESM/CJS vía `html-encoding-sniffer` que rompe
   Vitest en Node 20; se fijó `jsdom@24.1.3` (versión estable conocida).
+
+## [Unreleased] (continuación 10)
+
+### Añadido
+- T-07 del backlog de Sprint 0 completada: cliente HTTP tipado
+  (`frontend/src/api`) para los endpoints de auth y games (alcance de
+  Sprint 1: EP-01/EP-02), con manejo de errores vía `ApiError` y 3 tests;
+  cliente WebSocket `GameSocket` (`frontend/src/ws`) con reconexión por
+  backoff exponencial (soporta US-003, US-080). Desbloquea a Aleja y
+  Andrety para no depender de mocks desde la semana 1 de Sprint 1.
