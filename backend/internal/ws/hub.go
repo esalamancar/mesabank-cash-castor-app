@@ -68,7 +68,7 @@ func ServeHTTP(hub *Hub) gin.HandlerFunc {
 			log.Printf("ws: fallo en upgrade para partida %s: %v", code, err)
 			return
 		}
-		defer conn.Close()
+		defer func() { _ = conn.Close() }()
 
 		hub.register(code, conn)
 		defer hub.unregister(code, conn)

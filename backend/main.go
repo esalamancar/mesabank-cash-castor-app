@@ -30,5 +30,7 @@ func main() {
 	// historia a partir de Sprint 1; por ahora todos son stubs (T-06).
 	hub := ws.NewHub()
 	router := api.NewRouter(hub)
-	router.Run(":8080")
+	if err := router.Run(":8080"); err != nil {
+		log.Fatalf("el servidor terminó con error: %v", err)
+	}
 }
