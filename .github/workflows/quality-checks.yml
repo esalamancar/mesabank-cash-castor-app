@@ -85,6 +85,18 @@ jobs:
         if: needs.changes.outputs.frontend == 'true'
         working-directory: frontend
         run: npm ci
+      - name: npm run lint
+        if: needs.changes.outputs.frontend == 'true'
+        working-directory: frontend
+        run: npm run lint
+      - name: npm run format:check
+        if: needs.changes.outputs.frontend == 'true'
+        working-directory: frontend
+        run: npm run format:check
+      - name: npm run test:run
+        if: needs.changes.outputs.frontend == 'true'
+        working-directory: frontend
+        run: npm run test:run
       - name: npm run build
         if: needs.changes.outputs.frontend == 'true'
         working-directory: frontend

@@ -52,10 +52,13 @@ paralelizar entre el equipo disponible.
 - Configurar estado global (Zustand o Redux Toolkit, según ADR/arquitectura
   §2.2) con un store vacío de referencia.
 - Configurar ESLint/Prettier y Vitest.
-- **Estado (2026-09-18):** scaffold mínimo creado en `frontend/` (Vite +
-  React + TypeScript, `Dockerfile` multi-stage que sirve el build vía Nginx,
-  verificado localmente con `npm run build`). Pendiente: plugin PWA
-  (manifest, Service Worker), store global, ESLint/Prettier, Vitest.
+- **Estado (2026-09-27): Hecho.** `vite-plugin-pwa` configurado (manifest +
+  Service Worker cacheando assets estáticos); store de referencia con
+  Zustand (`src/store/useSessionStore.ts`); ESLint (flat config) +
+  Prettier + Vitest con un test de humo, los cuatro corriendo en CI
+  (`npm run lint/format:check/test:run/build`) como parte del check
+  `Frontend build`. Validado con Node 20 (la versión de CI) además de
+  local.
 - **Dependencias:** ninguna.
 
 ### T-03: Definición y publicación de la OpenAPI spec

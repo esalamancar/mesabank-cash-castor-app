@@ -7,6 +7,9 @@ Thumbs.db
 .idea/
 *.swp
 
+# Claude Code (worktrees de sesiones con isolation:"worktree")
+.claude/
+
 # Node
 node_modules/
 dist/
