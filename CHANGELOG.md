@@ -171,3 +171,18 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   (comandos para correr backend y frontend local y con Docker). Se agregó
   un banner al inicio guiando el orden de lectura para un dev nuevo, y se
   actualizó "Roles" con el frente (backend/frontend/DevOps) de cada dev.
+
+## [Unreleased] (continuación 5)
+
+### Corregido
+- `backlog/asignaciones.md`: Sprint 0 (fundaciones arquitectónicas) las
+  venía haciendo Erick directamente, no el equipo de devs — la asignación
+  anterior los tenía puestos ahí por error. Se corrige: Sprint 0 completo
+  queda a cargo de Erick, y los 4 devs pasan a Sprint 1 (Fase 1: Core
+  Bancario). Se documenta el estado real pendiente de Sprint 0 (todo
+  excepto T-13).
+
+### Añadido
+- Reparto de Sprint 1 (`EP-01`, `EP-02`, `EP-03`) en `backlog/asignaciones.md`:
+  parejas backend+frontend por épica — Harri+Aleja en EP-01/EP-03, Cris+
+  Andrety en EP-02.
