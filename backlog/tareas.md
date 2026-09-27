@@ -68,47 +68,53 @@ cada una en `docs/07-historias-usuario.md`. Las historias marcadas
 "Fuera del MVP" (US-200 en adelante) no se incluyen aquí — ver esa sección
 en `07-historias-usuario.md` si hace falta retomarlas en fase 2.
 
-| ID | Épica | Prioridad | Título | Estado |
-|----|-------|-----------|--------|--------|
-| US-001 | EP-01 | Must | Registro de usuario | Por hacer |
-| US-002 | EP-01 | Must | Login con usuario y PIN | Por hacer |
-| US-003 | EP-01 | Must | Recuperación de sesión tras desconexión | Por hacer |
-| US-004 | EP-01 | Must | Acceso como invitado | Por hacer |
-| US-005 | EP-01 | Should | Cierre de sesión | Por hacer |
-| US-010 | EP-02 | Must | Crear partida | Por hacer |
-| US-011 | EP-02 | Must | Generar código, QR y link de invitación | Por hacer |
-| US-012 | EP-02 | Must | Unirse a partida por código, QR o link | Por hacer |
-| US-013 | EP-02 | Must | Soporte de múltiples partidas simultáneas | Por hacer |
-| US-014 | EP-02 | Must | Reinicio de partida con confirmaciones múltiples | Por hacer |
-| US-015 | EP-02 | Must | Expulsión de jugador en bancarrota | Por hacer |
-| US-016 | EP-02 | Should | Consultar información de la partida | Por hacer |
-| US-017 | EP-02 | Must | Unirse a partida como espectador | Por hacer |
-| US-030 | EP-03 | Must | Definir masa monetaria total | Por hacer |
-| US-031 | EP-03 | Must | Definir asignación inicial por jugador | Por hacer |
-| US-032 | EP-03 | Must | Definir moneda y tasa de cambio | Por hacer |
-| US-033 | EP-03 | Should | Definir fee de transferencia | Por hacer |
-| US-034 | EP-03 | Must | Definir interés por ronda o por tiempo | Por hacer |
-| US-035 | EP-03 | Should | Definir deuda máxima como múltiplo del valor inicial | Por hacer |
-| US-036 | EP-03 | Could | Guardar valor de inflación (informativo, sin efecto funcional) | Por hacer |
-| US-050 | EP-04 | Must | Transferencia P2P idempotente | Por hacer |
-| US-051 | EP-04 | Must | Consignación de papel moneda a cuenta digital | Por hacer |
-| US-052 | EP-04 | Must | Préstamo del banco a jugador | Por hacer |
-| US-053 | EP-04 | Must | Pago automático de intereses | Por hacer |
-| US-054 | EP-04 | Must | Registro de deuda con el banco | Por hacer |
-| US-055 | EP-04 | Must | Liquidación de bancarrota | Por hacer |
-| US-056 | EP-04 | Must | Arqueo de caja en tiempo real (declaración del Banco) | Por hacer |
-| US-057 | EP-04 | Must | Historial de ingresos y egresos por jugador | Por hacer |
-| US-058 | EP-04 | Must | Auditoría completa para el Banco | Por hacer |
-| US-080 | EP-05 | Must | Sincronización en tiempo real vía WebSocket | Por hacer |
-| US-081 | EP-05 | Must | Asignación y avance de turnos | Por hacer |
-| US-082 | EP-05 | Must | Cálculo de interés por ronda | Por hacer |
-| US-083 | EP-05 | Must | Cálculo de interés por tiempo | Por hacer |
-| US-084 | EP-05 | Must | Vista de espectador (solo saldos en vivo) | Por hacer |
-| US-100 | EP-06 | Must | Cálculo de puntuación final de partida | Por hacer |
-| US-101 | EP-06 | Must | Leaderboard global de mejores partidas | Por hacer |
-| US-102 | EP-06 | Must | Exclusión de invitados del ranking | Por hacer |
-| US-110 | EP-07 | Could | Gestión de monedas soportadas | Por hacer |
-| US-111 | EP-07 | Could | Gestión de parámetros globales por defecto | Por hacer |
+Sprint y talla (T-shirt: XS=1, S=2, M=3, L=5, XL=8) de EP-01 a EP-03
+definidos en la planeación de Sprint 1; el reparto por tarea BE/FE, sus
+dependencias y el orden están en [`asignaciones.md`](./asignaciones.md).
+En Sprint 1, US-033 y US-035 cubren solo la configuración; su efecto llega
+con US-050 y US-052. Las demás épicas se dimensionan en su planeación.
+
+| ID | Épica | Prioridad | Título | Sprint | Talla BE | Talla FE | Estado |
+|----|-------|-----------|--------|--------|----------|----------|--------|
+| US-001 | EP-01 | Must | Registro de usuario | 1 | M | S | Por hacer |
+| US-002 | EP-01 | Must | Login con usuario y PIN | 1 | M | M | Por hacer |
+| US-003 | EP-01 | Must | Recuperación de sesión tras desconexión | 2 | S | M | Por hacer |
+| US-004 | EP-01 | Must | Acceso como invitado | 1 | S | S | Por hacer |
+| US-005 | EP-01 | Should | Cierre de sesión | 1 | S | XS | Por hacer |
+| US-010 | EP-02 | Must | Crear partida | 1 | M | S | Por hacer |
+| US-011 | EP-02 | Must | Generar código, QR y link de invitación | 1 | S | M | Por hacer |
+| US-012 | EP-02 | Must | Unirse a partida por código, QR o link | 1 | L | M | Por hacer |
+| US-013 | EP-02 | Must | Soporte de múltiples partidas simultáneas | 2 | L | — | Por hacer |
+| US-014 | EP-02 | Must | Reinicio de partida con confirmaciones múltiples | 2 | M | M | Por hacer |
+| US-015 | EP-02 | Must | Expulsión de jugador en bancarrota | 2 | S | S | Por hacer |
+| US-016 | EP-02 | Should | Consultar información de la partida | 1 | S | M | Por hacer |
+| US-017 | EP-02 | Must | Unirse a partida como espectador | 1 | S | S | Por hacer |
+| US-030 | EP-03 | Must | Definir masa monetaria total | 1 | S | M | Por hacer |
+| US-031 | EP-03 | Must | Definir asignación inicial por jugador | 1 | S | XS | Por hacer |
+| US-032 | EP-03 | Must | Definir moneda y tasa de cambio | 1 | S | M | Por hacer |
+| US-033 | EP-03 | Should | Definir fee de transferencia | 1 | XS | XS | Por hacer |
+| US-034 | EP-03 | Must | Definir interés por ronda o por tiempo | 1 | XS | S | Por hacer |
+| US-035 | EP-03 | Should | Definir deuda máxima como múltiplo del valor inicial | 1 | XS | XS | Por hacer |
+| US-036 | EP-03 | Could | Guardar valor de inflación (informativo, sin efecto funcional) | 2 | XS | XS | Por hacer |
+| US-050 | EP-04 | Must | Transferencia P2P idempotente | — | — | — | Por hacer |
+| US-051 | EP-04 | Must | Consignación de papel moneda a cuenta digital | — | — | — | Por hacer |
+| US-052 | EP-04 | Must | Préstamo del banco a jugador | — | — | — | Por hacer |
+| US-053 | EP-04 | Must | Pago automático de intereses | — | — | — | Por hacer |
+| US-054 | EP-04 | Must | Registro de deuda con el banco | — | — | — | Por hacer |
+| US-055 | EP-04 | Must | Liquidación de bancarrota | — | — | — | Por hacer |
+| US-056 | EP-04 | Must | Arqueo de caja en tiempo real (declaración del Banco) | — | — | — | Por hacer |
+| US-057 | EP-04 | Must | Historial de ingresos y egresos por jugador | — | — | — | Por hacer |
+| US-058 | EP-04 | Must | Auditoría completa para el Banco | — | — | — | Por hacer |
+| US-080 | EP-05 | Must | Sincronización en tiempo real vía WebSocket | — | — | — | Por hacer |
+| US-081 | EP-05 | Must | Asignación y avance de turnos | — | — | — | Por hacer |
+| US-082 | EP-05 | Must | Cálculo de interés por ronda | — | — | — | Por hacer |
+| US-083 | EP-05 | Must | Cálculo de interés por tiempo | — | — | — | Por hacer |
+| US-084 | EP-05 | Must | Vista de espectador (solo saldos en vivo) | — | — | — | Por hacer |
+| US-100 | EP-06 | Must | Cálculo de puntuación final de partida | — | — | — | Por hacer |
+| US-101 | EP-06 | Must | Leaderboard global de mejores partidas | — | — | — | Por hacer |
+| US-102 | EP-06 | Must | Exclusión de invitados del ranking | — | — | — | Por hacer |
+| US-110 | EP-07 | Could | Gestión de monedas soportadas | — | — | — | Por hacer |
+| US-111 | EP-07 | Could | Gestión de parámetros globales por defecto | — | — | — | Por hacer |
 
 ## Fixes (`FIX-xxx`)
 
