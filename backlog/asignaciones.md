@@ -11,10 +11,10 @@ enfocarse en el sprint actual, no una limitación de skill.
 | Dev | Rol | Frente en Sprint 1 |
 |-----|-----|---------------------|
 | Erick | Product Owner / DevOps / Infra / Arquitectura | DevOps, infraestructura, arquitectura (sigue cerrando Sprint 0) |
-| Harri | Desarrollo (fullstack) | Backend — EP-01, EP-03 |
-| Aleja | Desarrollo (fullstack) | Frontend — EP-01, EP-03 |
-| Cris | Desarrollo (fullstack) | Backend — EP-02 |
-| Andrety | Desarrollo (fullstack) | Frontend — EP-02 |
+| Harri | Desarrollo (fullstack) | Backend — EP-01, EP-03 (+ US-005 FE) |
+| Aleja | Desarrollo (fullstack) | Frontend — EP-01, EP-03 (+ US-034 BE) |
+| Cris | Desarrollo (fullstack) | Backend — EP-02, US-033/035 (+ US-017 FE) |
+| Andrety | Desarrollo (fullstack) | Frontend — EP-02, US-033/035 (+ US-011 BE) |
 
 ## Sprint 0 (tareas técnicas `T-xx`) — corregido 2026-09-27
 
@@ -40,20 +40,120 @@ Sprint 0 está al final de este archivo.
 | T-12 | Erick | Por hacer — depende de T-04, T-09 |
 | T-13 | Erick | Hecho |
 
-## Sprint 1 (Fase 1: Core Bancario — `EP-01`, `EP-02`, `EP-03`)
+## Sprint 1 (Fase 1: Core Bancario — `EP-01`, `EP-02`, `EP-03`) — semanas 3 a 5
 
-Reparto por pareja backend+frontend sobre la misma épica, para minimizar
-coordinación entre personas distintas en la misma pieza:
+Reparto **por tarea** (cada historia partida en BE y FE), con talla
+T-shirt para medir carga. Reemplaza el reparto por épica anterior, que
+dejaba a Harri/Aleja con 12 historias y a Cris/Andrety con 8.
 
-| Épica | Backend | Frontend | Notas |
-|-------|---------|----------|-------|
-| EP-01 (Autenticación y Sesión) | Harri | Aleja | Sin dependencias, puede arrancar ya |
-| EP-02 (Gestión de Partidas) | Cris | Andrety | Depende de EP-01 (requiere usuario autenticado o invitado) |
-| EP-03 (Configuración de Partida) | Harri | Aleja | Depende de EP-02 (la configuración pertenece a una partida ya creada) — arrancan con EP-01 mientras tanto |
+### Escala de tallas
 
-Historias de cada épica, criterios de aceptación en Gherkin y notas
-técnicas: `docs/07-historias-usuario.md`. Estado de cada historia:
-`backlog/tareas.md`.
+La talla mide **complejidad relativa**, no días (ver convención de
+`docs/07-historias-usuario.md`). Para sumar carga se usa esta equivalencia:
+
+| XS | S | M | L | XL |
+|----|---|---|---|----|
+| 1 | 2 | 3 | 5 | 8 |
+
+### Reglas del reparto
+
+- Todos son fullstack: cada dev tiene **una historia completa de punta a
+  punta (★)**, tomando la tarea del otro frente. El intercambio es
+  simétrico: los dos de backend toman algo de frontend y los dos de
+  frontend toman algo de backend.
+- EP-03 en este sprint es **solo configuración** (campo + validación). El
+  efecto de fee (US-033) y deuda máxima (US-035) llega con US-050 y US-052
+  en Sprint 2.
+- Harri es dueño del paquete de validación de `GameConfig`; Cris solo lo
+  invoca desde el handler de `POST /games` (US-010), para no pisarse en el
+  mismo código.
+
+### Tareas
+
+| Historia | Tarea | Talla | Dueño | Depende de |
+|----------|-------|-------|-------|------------|
+| **EP-01** | | | | |
+| US-001 Registro | BE: `POST /auth/register`, hash del PIN, validación 4-6 dígitos, 409 | M | Harri | — |
+| | FE: pantalla de registro y validaciones | S | Aleja | T-07 (o mocks) |
+| US-002 Login | BE: `POST /auth/login`, emisión de JWT, middleware de auth real (reemplaza el placeholder) | M | Harri | US-001 BE |
+| | FE: pantalla de login, persistencia del token, rutas protegidas | M | Aleja | T-02 (store), T-07 |
+| US-004 Invitado | BE: `POST /auth/guest`, JWT de invitado, rechazo al crear partida | S | Harri | US-002 BE |
+| | FE: pantalla de nombre de invitado | S | Aleja | US-002 FE |
+| US-005 Logout ★ (Should) | BE: blacklist de JWT en Redis, revisada en el middleware | S | Harri | US-002 BE, T-04 (Redis) |
+| | FE: botón de logout y limpieza de estado | XS | **Harri ★** | US-002 FE |
+| **EP-02** | | | | |
+| US-010 Crear partida | BE: `POST /games`, rol Banco, persistir `GameConfig` | M | Cris | US-002 BE (arranca con el placeholder) |
+| | FE: pantalla de crear partida (contenedor del formulario de config) | S | Andrety | T-07 (o mocks) |
+| US-011 Código/QR/link ★ | BE: código único entre partidas activas, link de invitación | S | **Andrety ★** | — (función aislada) |
+| | FE: mostrar código, generar QR, compartir link | M | Andrety | US-010 FE |
+| US-012 Unirse | BE: `POST /games/{code}/join`, rol Jugador, asignación inicial (CA-01), errores | L | Cris | US-010 BE, US-011 BE, US-031 BE |
+| | FE: unirse por código y ruta `/join/:code` (el QR abre el link, sin escáner dentro de la app) | M | Andrety | US-011 FE |
+| US-016 Info de partida (Should) | BE: `GET /games/{code}` y `GET /games/{code}/players` sin datos sensibles | S | Cris | US-010 BE |
+| | FE: vista de lobby con lista de jugadores | M | Andrety | US-012 FE |
+| US-017 Espectador ★ | BE: rol Espectador y bloqueo de operaciones para ese rol | S | Cris | US-012 BE |
+| | FE: elegir el rol al unirse y vista de solo lectura | S | **Cris ★** | US-012 FE, US-016 FE |
+| **EP-03** | | | | |
+| US-030 Masa monetaria | BE: validación, inmutabilidad, no iniciar sin config | S | Harri | US-010 BE |
+| | FE: formulario base de configuración | M | Aleja | US-010 FE |
+| US-031 Asignación inicial | BE: la suma de asignaciones no supera la masa total | S | Harri | US-030 BE |
+| | FE: campo del formulario | XS | Aleja | US-030 FE |
+| US-032 Moneda | BE: validar USD/COP/EUR o personalizada con tasa | S | Harri | US-030 BE |
+| | FE: selector de moneda y helper de formato de montos para toda la app | M | Aleja | US-030 FE |
+| US-034 Interés ★ | BE: validar tipo, tasa e intervalo | XS | **Aleja ★** | US-030 BE |
+| | FE: campos condicionales según el tipo de interés | S | Aleja | US-030 FE |
+| US-033 Fee (Should) | BE: validación, valor por defecto 0 | XS | Cris | US-030 BE |
+| | FE: campo | XS | Andrety | US-030 FE |
+| US-035 Deuda máxima (Should) | BE: validación del múltiplo | XS | Cris | US-030 BE |
+| | FE: campo | XS | Andrety | US-030 FE |
+
+### Carga por dev
+
+| Dev | Puntos | Historia completa (★) |
+|-----|--------|------------------------|
+| Harri | 17 | US-005 |
+| Aleja | 17 | US-034 |
+| Cris | 16 | US-017 |
+| Andrety | 15 | US-011 |
+| **Total** | **65** | |
+
+Es el primer sprint y no hay velocidad histórica: 65 puntos es una apuesta.
+Se revisa a mitad del sprint. Si hay que recortar, lo primero que sale es
+US-035, luego US-033 y luego US-005 (todas Should).
+
+### Orden sugerido
+
+1. **Semana 1:** Harri hace US-001 y US-002 BE (el middleware de auth real
+   desbloquea a todos). Cris arranca US-010 BE sobre el placeholder de
+   auth. Andrety hace US-011 BE y US-010 FE. Aleja hace las pantallas de
+   auth contra mocks si T-07 no está listo.
+2. **Semana 2:** Harri hace US-030, US-031 y US-032 BE. **US-031 BE tiene
+   que estar antes de que Cris cierre US-012.** Cris hace US-012 y US-016
+   BE. Aleja arma el formulario de config. Andrety hace US-011 FE y
+   US-012 FE.
+3. **Semana 3:** US-004, US-017, US-034 y las Should (US-005, US-033,
+   US-035).
+
+### Riesgos
+
+- El frontend depende de **T-02 (store) y T-07 (cliente API)**, que siguen
+  sin hacer (Erick). Si no están en la semana 1, Aleja y Andrety trabajan
+  contra mocks.
+- US-005 necesita Redis (T-04), que todavía no se ha verificado levantado.
+
+Historias, criterios en Gherkin y notas técnicas:
+`docs/07-historias-usuario.md`. Estado de cada tarea: `backlog/tareas.md`.
+
+## Sprint 2 (movidas desde Sprint 1)
+
+Sin dueño todavía; se asignan en la planeación de Sprint 2 junto con EP-04.
+
+| Historia | Motivo | Talla (BE / FE) |
+|----------|--------|------------------|
+| US-003 Recuperación de sesión | Depende de US-080 (reconexión WebSocket, EP-05) | S / M |
+| US-013 Partidas simultáneas | Depende de US-080 y de pruebas de carga | L / — |
+| US-014 Reinicio con confirmaciones | El PO todavía no define el flujo; toca el arqueo (CA-04) | M / M |
+| US-015 Expulsión por bancarrota | Depende de US-055 (EP-04) | S / S |
+| US-036 Inflación informativa | Es Could y no tiene efecto funcional | XS / XS |
 
 ## Fase 2 en adelante (`EP-04` a `EP-07`)
 
