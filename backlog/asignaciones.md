@@ -36,7 +36,7 @@ Sprint 0 está al final de este archivo.
 | T-08 | Erick | Por hacer — mayor riesgo de calendario (depende de un equipo externo); prioridad |
 | T-09 | Erick | Por hacer — depende de T-08 |
 | T-10 | Erick | Por hacer — depende de T-01, T-02, T-08, T-09 |
-| T-11 | Erick | Por hacer — depende de T-06 |
+| T-11 | Erick | Hecho |
 | T-12 | Erick | Por hacer — depende de T-04, T-09 |
 | T-13 | Erick | Hecho |
 
@@ -68,7 +68,7 @@ Todavía sin asignar.
 
 ## Pendiente de Sprint 0 (a cargo de Erick)
 
-Actualizado 2026-09-27. Hechas: `T-01`, `T-06`, `T-13`. En progreso: `T-04`,
+Actualizado 2026-09-27. Hechas: `T-01`, `T-06`, `T-11`, `T-13`. En progreso: `T-04`,
 `T-05`. `T-08/T-09/T-10` delegadas al agente de `single-iac` (mismo dueño,
 Erick, por ser tema de arquitectura — no es coordinación con otro equipo).
 
@@ -86,7 +86,5 @@ Erick, por ser tema de arquitectura — no es coordinación con otro equipo).
   T-02/T-03.
 - **T-08 / T-09 / T-10** (convenciones, manifiestos K8s, pipeline CI/CD de
   `single-iac`): delegadas al agente de `single-iac`, esperando respuesta.
-- **T-11** (observabilidad: logging estructurado, `readyz`, métricas):
-  sin empezar, solo existe el `GET /healthz` básico del scaffold.
 - **T-12** (documentación de entornos local/dev/staging/prod): sin
   empezar.

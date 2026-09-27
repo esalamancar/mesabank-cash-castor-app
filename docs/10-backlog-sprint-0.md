@@ -140,6 +140,13 @@ paralelizar entre el equipo disponible.
 - Endpoints de `healthz`/`readyz` para probes de Kubernetes.
 - Métricas básicas expuestas (Prometheus): latencia de endpoints,
   conexiones WebSocket activas, tasa de errores.
+- **Estado (2026-09-27): Hecho** (`backend/internal/observability`) —
+  logging JSON por request (`request_id` propio o del header
+  `X-Request-Id`, más `game_code` cuando la ruta tiene `:code`); `GET
+  /readyz` hace ping real a Postgres y responde 503 si falla (a diferencia
+  de `/healthz`, que solo indica que el proceso está vivo); `GET /metrics`
+  expone `http_requests_total`, `http_request_duration_seconds` y
+  `websocket_connections_active` en formato Prometheus.
 - **Dependencias:** T-06.
 
 ### T-12: Documentación de entornos

@@ -220,3 +220,13 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   T-10 (convenciones, manifiestos K8s y pipeline CI/CD de `single-iac`),
   con todo el contexto de arquitectura/stack/git-flow necesario para que
   las resuelva bajo el estándar de ese repo.
+
+## [Unreleased] (continuación 8)
+
+### Añadido
+- T-11 del backlog de Sprint 0 completada: logging estructurado JSON
+  (`backend/internal/observability`) con `request_id` y `game_code` por
+  request, `GET /readyz` (ping real a Postgres, 503 si falla) y `GET
+  /metrics` en formato Prometheus (`http_requests_total`,
+  `http_request_duration_seconds`, `websocket_connections_active`).
+- `db.Ping()` en `backend/internal/db` para el chequeo de `/readyz`.
