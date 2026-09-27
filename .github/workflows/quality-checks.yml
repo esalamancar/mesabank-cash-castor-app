@@ -58,6 +58,12 @@ jobs:
         if: needs.changes.outputs.backend == 'true'
         working-directory: backend
         run: go build ./...
+      - name: golangci-lint
+        if: needs.changes.outputs.backend == 'true'
+        uses: golangci/golangci-lint-action@v6
+        with:
+          working-directory: backend
+          version: latest
       - name: Sin cambios en backend/
         if: needs.changes.outputs.backend != 'true'
         run: echo "No hay cambios en backend/, se omite el build."

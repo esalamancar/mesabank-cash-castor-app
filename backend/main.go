@@ -3,12 +3,11 @@ package main
 import (
 	"flag"
 	"log"
-	"net/http"
 
-	"github.com/gin-gonic/gin"
-
+	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/api"
 	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/db"
 	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/models"
+	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/ws"
 )
 
 func main() {
@@ -27,13 +26,9 @@ func main() {
 		return
 	}
 
-	// La conexión a datos para el servidor HTTP se agrega en T-06, cuando
-	// los handlers empiecen a necesitarla de verdad.
-	router := gin.Default()
-
-	router.GET("/healthz", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
-
+	// La conexión a datos para los handlers reales se agrega historia por
+	// historia a partir de Sprint 1; por ahora todos son stubs (T-06).
+	hub := ws.NewHub()
+	router := api.NewRouter(hub)
 	router.Run(":8080")
 }

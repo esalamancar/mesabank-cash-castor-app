@@ -31,12 +31,12 @@ Detalle completo de cada una en `docs/10-backlog-sprint-0.md`.
 
 | ID | Título | Estado |
 |----|--------|--------|
-| T-01 | Setup del repositorio backend (Go) | En progreso — scaffold mínimo listo (`backend/`), falta estructura de capas y linting |
+| T-01 | Setup del repositorio backend (Go) | Hecho — estructura de capas (`internal/api,middleware,ws,db,models`), `golangci-lint` configurado y en CI |
 | T-02 | Setup del repositorio frontend (React + Vite + PWA) | En progreso — scaffold mínimo listo (`frontend/`), falta plugin PWA y store |
 | T-03 | Definición y publicación de la OpenAPI spec | Por hacer |
 | T-04 | Setup de PostgreSQL y Redis en local/desarrollo | En progreso — `docker-compose.yml` listo (sintaxis validada, no se pudo levantar en este entorno por permisos de Docker) |
 | T-05 | Modelo de datos y migraciones iniciales | En progreso — modelos GORM de las 7 entidades y flag `--migrations-only` listos (ADR-008); falta seed de datos de desarrollo |
-| T-06 | Esqueleto de capas backend | Por hacer |
+| T-06 | Esqueleto de capas backend | Hecho — 28 rutas del OpenAPI como stubs, middleware de auth (placeholder), hub de WebSocket base |
 | T-07 | Cliente API + WebSocket base en el frontend | Por hacer |
 | T-08 | Coordinación con `single-iac` | Por hacer |
 | T-09 | Manifiestos de Kubernetes | Por hacer |
