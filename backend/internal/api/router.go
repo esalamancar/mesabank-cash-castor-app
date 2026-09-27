@@ -9,7 +9,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/db"
 	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/middleware"
+	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/observability"
 	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/ws"
 )
 
@@ -27,11 +29,28 @@ func stub(endpoint string) gin.HandlerFunc {
 // NewRouter arma todas las rutas del contrato. hub es el hub de WebSocket
 // (paquete ws) compartido por toda la app.
 func NewRouter(hub *ws.Hub) *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Recovery())
+
+	logger := observability.NewLogger()
+	router.Use(observability.RequestLogger(logger))
+	router.Use(observability.Metrics())
 
 	router.GET("/healthz", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": "ok"})
 	})
+
+	// /readyz sí depende de la base de datos (T-11): a diferencia de
+	// /healthz, indica si el proceso está listo para recibir tráfico real.
+	router.GET("/readyz", func(c *gin.Context) {
+		if err := db.Ping(); err != nil {
+			c.JSON(http.StatusServiceUnavailable, gin.H{"status": "not_ready", "error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"status": "ready"})
+	})
+
+	router.GET("/metrics", observability.Handler())
 
 	authGroup := router.Group("/auth")
 	{

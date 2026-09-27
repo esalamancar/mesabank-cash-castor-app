@@ -11,6 +11,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+
+	"github.com/esalamancar/mesabank-cash-castor-app/backend/internal/observability"
 )
 
 // Hub mantiene, por código de partida, el conjunto de conexiones activas.
@@ -30,6 +32,7 @@ func (h *Hub) register(code string, conn *websocket.Conn) {
 		h.rooms[code] = make(map[*websocket.Conn]bool)
 	}
 	h.rooms[code][conn] = true
+	observability.WebsocketConnections.Inc()
 }
 
 func (h *Hub) unregister(code string, conn *websocket.Conn) {
@@ -39,6 +42,7 @@ func (h *Hub) unregister(code string, conn *websocket.Conn) {
 	if len(h.rooms[code]) == 0 {
 		delete(h.rooms, code)
 	}
+	observability.WebsocketConnections.Dec()
 }
 
 // Broadcast envía message a todos los clientes conectados a una partida.

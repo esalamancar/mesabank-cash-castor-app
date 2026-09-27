@@ -31,3 +31,21 @@ func Connect() (*gorm.DB, error) {
 
 	return gorm.Open(postgres.Open(dsn), &gorm.Config{})
 }
+
+// Ping intenta conectar y hacer ping a la base de datos. Se usa en
+// /readyz (T-11): a diferencia de Connect(), no se guarda la conexión —
+// cada chequeo de readiness abre y cierra la suya para reflejar el
+// estado real en el momento de la consulta.
+func Ping() error {
+	conn, err := Connect()
+	if err != nil {
+		return err
+	}
+	sqlDB, err := conn.DB()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = sqlDB.Close() }()
+
+	return sqlDB.Ping()
+}

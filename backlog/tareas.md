@@ -41,7 +41,7 @@ Detalle completo de cada una en `docs/10-backlog-sprint-0.md`.
 | T-08 | Coordinación con `single-iac` | Por hacer |
 | T-09 | Manifiestos de Kubernetes | Por hacer |
 | T-10 | Pipeline de CI/CD base en `single-iac` | Por hacer |
-| T-11 | Observabilidad base | Por hacer |
+| T-11 | Observabilidad base | Hecho — logging JSON con request_id/game_code, `/readyz` (chequea Postgres), `/metrics` (Prometheus) |
 | T-12 | Documentación de entornos | Por hacer |
 | T-13 | Quality gate de PRs en GitHub Actions | Hecho — 4 checks activos en `develop` |
 
