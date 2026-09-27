@@ -11,6 +11,14 @@ gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío
     ├── LICENSE
     ├── .gitignore
     ├── supuestos-y-preguntas-abiertas.md
+    ├── .github/
+    │   ├── CODEOWNERS
+    │   └── workflows/quality-checks.yml
+    ├── backend/          # scaffold Go + Gin (Dockerfile incluido)
+    ├── frontend/         # scaffold Vite + React + TS (Dockerfile incluido)
+    ├── backlog/          # tablero de trabajo vivo (distinto de docs/, ver abajo)
+    │   ├── tareas.md
+    │   └── asignaciones.md
     └── docs/
         ├── 01-product-brief.md
         ├── 02-prd.md
@@ -40,7 +48,8 @@ gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío
 ## Roles
 
 - **Product Owner / Arquitecto:** Erick Salamanca
-- **Equipo de desarrollo:** por definir
+- **Equipo de desarrollo:** Harri, Aleja, Andrety, Cris. Ver reparto de
+  tareas en [`backlog/asignaciones.md`](backlog/asignaciones.md).
 
 ## Flujo de trabajo (Git)
 
