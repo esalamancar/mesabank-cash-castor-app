@@ -1,0 +1,195 @@
+name: Build, push and deploy
+
+# Mismo patrón que .github/workflows/build-image.yml de spot-calling
+# (single-iac, ver ADR-0017 de single-iac y ADR-009 de este repo): cada app
+# es dueña de su propio pipeline de build+push+deploy, single-iac solo
+# reconcilia los recursos sin imagen de k8s-manifests/cashcastor/
+# (Service/Ingress/PVC, ver kustomization.yaml ahí). Los deployments/
+# migraciones de acá deben coincidir con los nombres de recurso ya
+# aplicados por single-iac (namespace `cashcastor`, Deployments `api`/`web`).
+on:
+  push:
+    branches: [develop]
+    paths:
+      - "backend/**"
+      - "frontend/**"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+
+  build-api:
+    name: Build & push cashcastor-api
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/cashcastor-api
+          tags: |
+            type=sha,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+      - uses: docker/build-push-action@v6
+        with:
+          context: backend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=cashcastor-api
+          cache-to: type=gha,mode=max,scope=cashcastor-api
+
+  build-web:
+    name: Build & push cashcastor-web
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/cashcastor-web
+          tags: |
+            type=sha,format=short
+            type=raw,value=latest,enable={{is_default_branch}}
+      - uses: docker/build-push-action@v6
+        with:
+          context: frontend
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=cashcastor-web
+          cache-to: type=gha,mode=max,scope=cashcastor-web
+
+  deploy-api:
+    name: Migrar y desplegar api
+    needs: [changes, build-api]
+    if: github.event_name == 'push' && needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-cashcastor-api
+      cancel-in-progress: false
+    steps:
+      - name: Preparar clave SSH de terraform-svc
+        run: |
+          install -m 700 -d ~/.ssh
+          install -m 600 /dev/null ~/.ssh/id_ed25519
+          echo "${{ secrets.TERRAFORM_SVC_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          ssh-keyscan -p "${{ secrets.VPS_SSH_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      # kubectl corre LOCAL en el VPS (mismo motivo que spot-calling: el
+      # puerto 6443 está firewalleado desde afuera a propósito, ADR-0002 de
+      # single-iac). Migración primero (AutoMigrate de GORM vía
+      # `--migrations-only`, ver ADR-008 de este repo y main.go) con la
+      # imagen nueva -- recién después se mueve el tráfico. Si la
+      # migración falla, este job falla y `api` se queda en la imagen
+      # anterior.
+      - name: Migrar y desplegar api
+        run: |
+          SHORT_TAG="sha-$(echo ${{ github.sha }} | cut -c1-7)"
+          ssh -p "${{ secrets.VPS_SSH_PORT }}" "${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_HOST }}" "
+            set -euo pipefail
+            sudo /usr/bin/cat /etc/rancher/k3s/k3s.yaml > /tmp/k3s-deploy.yaml
+            export KUBECONFIG=/tmp/k3s-deploy.yaml
+
+            kubectl delete job migrate-${SHORT_TAG} -n cashcastor --ignore-not-found
+            kubectl apply -f - <<EOF
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: migrate-${SHORT_TAG}
+            namespace: cashcastor
+          spec:
+            backoffLimit: 0
+            template:
+              spec:
+                imagePullSecrets:
+                  - name: ghcr-pull-secret
+                restartPolicy: Never
+                containers:
+                  - name: migrate
+                    image: ghcr.io/esalamancar/cashcastor-api:${SHORT_TAG}
+                    command: [\"/usr/local/bin/cashcastor-api\", \"--migrations-only\"]
+                    envFrom:
+                      - secretRef:
+                          name: cashcastor-api-env
+                    resources:
+                      requests:
+                        cpu: 100m
+                        memory: 64Mi
+                      limits:
+                        cpu: 300m
+                        memory: 256Mi
+          EOF
+            kubectl wait --for=condition=complete job/migrate-${SHORT_TAG} -n cashcastor --timeout=120s
+
+            kubectl set image deployment/api api=ghcr.io/esalamancar/cashcastor-api:${SHORT_TAG} -n cashcastor
+            kubectl rollout status deployment/api -n cashcastor --timeout=120s
+
+            rm -f /tmp/k3s-deploy.yaml
+          "
+
+  deploy-web:
+    name: Desplegar web
+    needs: [changes, build-web]
+    if: github.event_name == 'push' && needs.changes.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-cashcastor-web
+      cancel-in-progress: false
+    steps:
+      - name: Preparar clave SSH de terraform-svc
+        run: |
+          install -m 700 -d ~/.ssh
+          install -m 600 /dev/null ~/.ssh/id_ed25519
+          echo "${{ secrets.TERRAFORM_SVC_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          ssh-keyscan -p "${{ secrets.VPS_SSH_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      # Sin migración -- solo Nginx sirviendo el build estático.
+      - name: Desplegar web
+        run: |
+          SHORT_TAG="sha-$(echo ${{ github.sha }} | cut -c1-7)"
+          ssh -p "${{ secrets.VPS_SSH_PORT }}" "${{ secrets.VPS_SSH_USER }}@${{ secrets.VPS_HOST }}" "
+            set -euo pipefail
+            sudo /usr/bin/cat /etc/rancher/k3s/k3s.yaml > /tmp/k3s-deploy.yaml
+            export KUBECONFIG=/tmp/k3s-deploy.yaml
+
+            kubectl set image deployment/web web=ghcr.io/esalamancar/cashcastor-web:${SHORT_TAG} -n cashcastor
+            kubectl rollout status deployment/web -n cashcastor --timeout=120s
+
+            rm -f /tmp/k3s-deploy.yaml
+          "
