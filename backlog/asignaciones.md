@@ -5,37 +5,39 @@ a mano; si un ID no aparece acá, todavía no tiene dueño asignado.
 
 ## Equipo
 
-| Dev | Rol |
-|-----|-----|
-| Erick | Product Owner / DevOps |
-| Harri | Desarrollo |
-| Aleja | Desarrollo |
-| Andrety | Desarrollo |
-| Cris | Desarrollo |
+Todos los devs son fullstack — el frente asignado abajo es dónde van a
+enfocarse en el Sprint 0, no una limitación de skill.
+
+| Dev | Rol | Frente en Sprint 0 |
+|-----|-----|---------------------|
+| Erick | Product Owner / DevOps / Infra / Arquitectura | DevOps, infraestructura, arquitectura |
+| Harri | Desarrollo (fullstack) | Backend |
+| Cris | Desarrollo (fullstack) | Backend |
+| Aleja | Desarrollo (fullstack) | Frontend |
+| Andrety | Desarrollo (fullstack) | Frontend |
 
 ## Sprint 0 (tareas técnicas `T-xx`)
 
-Reparto inicial: Erick se enfoca en la parte de infraestructura/DevOps
-(coordinación con `single-iac`, Kubernetes, CI/CD, observabilidad); Harri y
-Aleja arrancan con el lado backend; Andrety y Cris con el lado frontend.
-Es un punto de partida — ajústenlo según carga real y quién tenga más
-afinidad con cada pieza.
+Reparto por frente (2026-09-27): Harri y Cris en backend, Aleja y Andrety
+en frontend, Erick en DevOps/infraestructura/arquitectura. Dentro de cada
+frente se dividen las tareas según carga y dependencia, no necesariamente
+una por persona.
 
 | ID | Asignado a | Notas |
 |----|------------|-------|
-| T-01 | Harri | En progreso — falta estructura de capas y linting sobre el scaffold ya creado |
-| T-02 | Andrety | En progreso — falta plugin PWA y store sobre el scaffold ya creado |
-| T-03 | Aleja | — |
-| T-04 | Erick | — |
-| T-05 | Harri | Depende de T-04 |
-| T-06 | Aleja | Depende de T-01, T-05 |
-| T-07 | Cris | Depende de T-02, T-03 |
-| T-08 | Erick | Mayor riesgo de calendario (depende de un equipo externo); priorizar desde el día 1 |
-| T-09 | Erick | Depende de T-08 |
-| T-10 | Erick | Depende de T-01, T-02, T-08, T-09 |
-| T-11 | Erick | Depende de T-06 |
-| T-12 | Erick | Depende de T-04, T-09 |
-| T-13 | Erick | Hecho |
+| T-01 | Harri | Backend. En progreso — falta estructura de capas y linting sobre el scaffold ya creado |
+| T-02 | Aleja | Frontend. En progreso — falta plugin PWA y store sobre el scaffold ya creado |
+| T-03 | Cris | Backend |
+| T-04 | Erick | DevOps |
+| T-05 | Cris | Backend. Depende de T-04 |
+| T-06 | Harri | Backend. Depende de T-01, T-05 |
+| T-07 | Andrety | Frontend. Depende de T-02, T-03 |
+| T-08 | Erick | DevOps. Mayor riesgo de calendario (depende de un equipo externo); priorizar desde el día 1 |
+| T-09 | Erick | DevOps. Depende de T-08 |
+| T-10 | Erick | DevOps. Depende de T-01, T-02, T-08, T-09 |
+| T-11 | Erick | DevOps. Depende de T-06 |
+| T-12 | Erick | DevOps. Depende de T-04, T-09 |
+| T-13 | Erick | DevOps. Hecho |
 
 ## Fase 1 en adelante (épicas y features)
 
