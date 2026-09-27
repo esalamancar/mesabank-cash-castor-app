@@ -230,3 +230,17 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   /metrics` en formato Prometheus (`http_requests_total`,
   `http_request_duration_seconds`, `websocket_connections_active`).
 - `db.Ping()` en `backend/internal/db` para el chequeo de `/readyz`.
+
+## [Unreleased] (continuación 9)
+
+### Añadido
+- T-02 del backlog de Sprint 0 completada: `vite-plugin-pwa` (manifest +
+  Service Worker de assets estáticos, ADR-006), store de referencia con
+  Zustand (`src/store/useSessionStore.ts`), ESLint (flat config) +
+  Prettier, y Vitest con un test de humo. `npm run lint/format:check/
+  test:run` agregados al check `Frontend build` de CI.
+
+### Corregido
+- `jsdom@30` (recién publicado al momento de instalar) tiene un bug real
+  de interoperabilidad ESM/CJS vía `html-encoding-sniffer` que rompe
+  Vitest en Node 20; se fijó `jsdom@24.1.3` (versión estable conocida).

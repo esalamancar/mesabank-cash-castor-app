@@ -32,7 +32,7 @@ Detalle completo de cada una en `docs/10-backlog-sprint-0.md`.
 | ID | Título | Estado |
 |----|--------|--------|
 | T-01 | Setup del repositorio backend (Go) | Hecho — estructura de capas (`internal/api,middleware,ws,db,models`), `golangci-lint` configurado y en CI |
-| T-02 | Setup del repositorio frontend (React + Vite + PWA) | En progreso — scaffold mínimo listo (`frontend/`), falta plugin PWA y store |
+| T-02 | Setup del repositorio frontend (React + Vite + PWA) | Hecho — PWA, store (Zustand), ESLint/Prettier, Vitest, todo en CI |
 | T-03 | Definición y publicación de la OpenAPI spec | Por hacer |
 | T-04 | Setup de PostgreSQL y Redis en local/desarrollo | En progreso — `docker-compose.yml` listo (sintaxis validada, no se pudo levantar en este entorno por permisos de Docker) |
 | T-05 | Modelo de datos y migraciones iniciales | En progreso — modelos GORM de las 7 entidades y flag `--migrations-only` listos (ADR-008); falta seed de datos de desarrollo |
