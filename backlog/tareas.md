@@ -38,11 +38,11 @@ Detalle completo de cada una en `docs/10-backlog-sprint-0.md`.
 | T-05 | Modelo de datos y migraciones iniciales | En progreso — modelos GORM de las 7 entidades y flag `--migrations-only` listos (ADR-008); falta seed de datos de desarrollo |
 | T-06 | Esqueleto de capas backend | Hecho — 28 rutas del OpenAPI como stubs, middleware de auth (placeholder), hub de WebSocket base |
 | T-07 | Cliente API + WebSocket base en el frontend | Hecho — cliente tipado (auth/games) y `GameSocket` con reconexión |
-| T-08 | Coordinación con `single-iac` | Por hacer |
-| T-09 | Manifiestos de Kubernetes | Por hacer |
-| T-10 | Pipeline de CI/CD base en `single-iac` | Por hacer |
+| T-08 | Coordinación con `single-iac` | En revisión — resuelto en rama `add-cashcastor-namespace` de `single-iac`, sin mergear/aplicar |
+| T-09 | Manifiestos de Kubernetes | En revisión — mismo estado que T-08 |
+| T-10 | Pipeline de CI/CD base (workflow propio de build+push+deploy) | Por hacer — redefinido en ADR-009, ya no es "en single-iac" |
 | T-11 | Observabilidad base | Hecho — logging JSON con request_id/game_code, `/readyz` (chequea Postgres), `/metrics` (Prometheus) |
-| T-12 | Documentación de entornos | Por hacer |
+| T-12 | Documentación de entornos | Parcial — local en `README.md`; dev/qa/prod no aplica (decisión, ver ADR-009) |
 | T-13 | Quality gate de PRs en GitHub Actions | Hecho — 4 checks activos en `develop` |
 
 ---

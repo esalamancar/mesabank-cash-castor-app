@@ -266,3 +266,29 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
 **Con esto, Sprint 0 queda completo salvo T-04/T-05 (verificación
 pendiente por permisos de Docker en este entorno) y T-08/T-09/T-10/T-12,
 delegadas al agente de `single-iac`.**
+
+## [Unreleased] (continuación 12)
+
+### Añadido
+- `ADR-009`: modelo real de responsabilidad CI/CD con `single-iac` — cada
+  app construye/publica/despliega su propia imagen; `single-iac` solo
+  aplica manifiestos. Reemplaza la lectura original de ADR-007 (que se
+  podía interpretar como pipeline centralizado en `single-iac`).
+
+### Cambiado
+- `03-arquitectura.md` §2.4 actualizado con lo que realmente aprovisionó
+  `single-iac` (namespace vía Terraform, nombres `api`/`web`, sin
+  separación de infra por entorno).
+- Se cierra la pregunta abierta #8 de `supuestos-y-preguntas-abiertas.md`.
+- Backlog (`docs/10-backlog-sprint-0.md`, `backlog/tareas.md`,
+  `backlog/asignaciones.md`) actualizado: T-08/T-09 resueltas por
+  `single-iac` (pendiente merge + `terraform-apply.yml` manual del PO),
+  T-10 redefinida (workflow propio en este repo), T-12 parcial (no aplica
+  separación dev/qa/prod por ahora, decisión explícita).
+
+### Notas
+- Nada de lo anterior está aplicado contra el cluster real. Vive en la
+  rama `add-cashcastor-namespace` de `single-iac`, pendiente de revisión
+  del PO.
+- Redis queda desplegado sin cliente todavía en `backend/` (decisión: se
+  conecta cuando el código lo necesite — idempotencia, sesiones, pub/sub).
