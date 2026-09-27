@@ -254,3 +254,15 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   cliente WebSocket `GameSocket` (`frontend/src/ws`) con reconexión por
   backoff exponencial (soporta US-003, US-080). Desbloquea a Aleja y
   Andrety para no depender de mocks desde la semana 1 de Sprint 1.
+
+## [Unreleased] (continuación 11)
+
+### Añadido
+- T-03 del backlog de Sprint 0 completada: check `OpenAPI lint`
+  (`@redocly/cli lint`) agregado como obligatorio en las 3 rulesets;
+  `docs/openapi.html` (Redoc estático, autocontenido) generado y
+  commiteado, con el comando de regeneración documentado en `README.md`.
+
+**Con esto, Sprint 0 queda completo salvo T-04/T-05 (verificación
+pendiente por permisos de Docker en este entorno) y T-08/T-09/T-10/T-12,
+delegadas al agente de `single-iac`.**

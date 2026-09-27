@@ -27,6 +27,14 @@ jobs:
           fi
           echo "Nombre de rama válido: $BRANCH"
 
+  openapi-lint:
+    name: OpenAPI lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: redocly lint
+        run: npx --yes @redocly/cli lint docs/08-openapi.yaml
+
   changes:
     runs-on: ubuntu-latest
     outputs:

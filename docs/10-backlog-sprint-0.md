@@ -66,6 +66,10 @@ paralelizar entre el equipo disponible.
   CI (evitar que se rompa el contrato sin darse cuenta).
 - Publicar la spec como documentación navegable (Redoc/Swagger UI) para el
   equipo, aunque sea en un job de CI o página estática interna.
+- **Estado (2026-09-27): Hecho.** Check `OpenAPI lint` agregado como
+  obligatorio en las 3 rulesets; `docs/openapi.html` (Redoc estático,
+  autocontenido) generado y commiteado, se regenera a mano cuando cambia
+  la spec (comando en `README.md`).
 - **Dependencias:** spec ya generada en `docs/08-openapi.yaml`.
 
 ### T-04: Setup de PostgreSQL y Redis en local/desarrollo
