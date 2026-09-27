@@ -70,12 +70,16 @@ paralelizar entre el equipo disponible.
 - **Dependencias:** T-01 (para que el backend tenga dónde conectarse).
 
 ### T-05: Modelo de datos y migraciones iniciales
-- Elegir herramienta de migraciones (`golang-migrate` o `goose`).
-- Migraciones iniciales para las 7 entidades del PRD §5: `User`, `Game`,
+- **Actualizado (ADR-008):** no se usa `golang-migrate`/`goose` ni SQL
+  manual. El esquema se define como modelos GORM y se aplica con
+  `AutoMigrate`, disparado por el propio binario del backend con el flag
+  `--migrations-only` (corre las migraciones y termina, pensado para un Job
+  de Kubernetes o paso de pipeline).
+- Modelos GORM para las 7 entidades del PRD §5: `User`, `Game`,
   `GameConfig`, `Player`, `Transaction`, `Loan`, `AuditLog`, con índices y
-  llaves foráneas correspondientes (`game_id`, `user_id`, `player_id`).
+  relaciones (`game_id`, `user_id`, `player_id`) declaradas vía tags GORM.
 - Seed mínimo de datos de desarrollo (usuario de prueba, monedas por
-  defecto para EP-07).
+  defecto para EP-07) — sigue pendiente de definir cómo se dispara.
 - **Dependencias:** T-04.
 
 ### T-06: Esqueleto de capas backend
@@ -86,8 +90,7 @@ paralelizar entre el equipo disponible.
   real todavía si no está listo EP-01).
 - Hub de WebSocket base (una conexión, un canal por partida, sin lógica de
   negocio aún).
-- Capa de repositorios conectada a PostgreSQL (sqlc o GORM, según se decida
-  en el equipo — la arquitectura menciona ambas opciones sin decidir).
+- Capa de repositorios conectada a PostgreSQL vía GORM (ADR-008).
 - **Dependencias:** T-01, T-05.
 
 ### T-07: Cliente API + WebSocket base en el frontend
@@ -163,8 +166,7 @@ paralelizar entre el equipo disponible.
   `supuestos-y-preguntas-abiertas.md`, pregunta #8). Si no se resuelve
   temprano, T-09 y T-10 —y por lo tanto todo el pipeline de despliegue—
   se retrasan. Se recomienda agendarla en los primeros 2 días de la Fase 0.
-- La elección entre `sqlc` y `GORM` (mencionada como abierta en
-  `03-arquitectura.md` §2.1) debe resolverse en T-06 antes de escribir el
-  primer repositorio, para no reescribir código.
-- La elección de `golang-migrate` vs. `goose` (T-05) es indistinta a nivel
-  de producto; se recomienda la que el equipo de desarrollo ya conozca.
+- **Resuelto (ADR-008):** la elección entre `sqlc` y `GORM` (antes abierta
+  en `03-arquitectura.md` §2.1) se decidió por GORM, con `AutoMigrate` en
+  vez de `golang-migrate`/`goose` — ver ADR-008 para el detalle y el
+  razonamiento.

@@ -186,3 +186,21 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
 - Reparto de Sprint 1 (`EP-01`, `EP-02`, `EP-03`) en `backlog/asignaciones.md`:
   parejas backend+frontend por épica — Harri+Aleja en EP-01/EP-03, Cris+
   Andrety en EP-02.
+
+## [Unreleased] (continuación 6)
+
+### Añadido
+- `docker-compose.yml` + `.env.example`: PostgreSQL y Redis para desarrollo
+  local (T-04). Sintaxis validada (`docker compose config`); no se pudo
+  levantar en este entorno por permisos de Docker del sandbox.
+- Modelos GORM para las 7 entidades del PRD §5 (`backend/internal/models`)
+  y flag de arranque `--migrations-only` en el backend, que corre
+  `AutoMigrate` y termina (T-05).
+- `ADR-008`: se decide GORM + `AutoMigrate` en vez de scripts SQL manuales
+  (`golang-migrate`/`goose`), resolviendo la elección que estaba abierta
+  entre `sqlc` y `GORM` en `03-arquitectura.md` §2.1.
+
+### Cambiado
+- `03-arquitectura.md` y `10-backlog-sprint-0.md` actualizados para
+  reflejar ADR-008 (ya no mencionan `sqlc`/`golang-migrate`/`goose` como
+  opciones abiertas).
