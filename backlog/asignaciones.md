@@ -33,11 +33,11 @@ Sprint 0 está al final de este archivo.
 | T-05 | Erick | En progreso — modelos GORM y flag `--migrations-only` listos; falta seed de datos |
 | T-06 | Erick | Hecho |
 | T-07 | Erick | Hecho |
-| T-08 | Erick | Por hacer — mayor riesgo de calendario (depende de un equipo externo); prioridad |
-| T-09 | Erick | Por hacer — depende de T-08 |
-| T-10 | Erick | Por hacer — depende de T-01, T-02, T-08, T-09 |
+| T-08 | Erick | En revisión — resuelto por el agente de `single-iac`, pendiente merge/apply |
+| T-09 | Erick | En revisión — mismo estado que T-08 |
+| T-10 | Erick | Por hacer — redefinido (ADR-009): workflow propio de build+push+deploy en este repo |
 | T-11 | Erick | Hecho |
-| T-12 | Erick | Por hacer — depende de T-04, T-09 |
+| T-12 | Erick | Parcial — local documentado; dev/qa/prod no aplica (ADR-009) |
 | T-13 | Erick | Hecho |
 
 ## Sprint 1 (Fase 1: Core Bancario — `EP-01`, `EP-02`, `EP-03`) — semanas 3 a 5
@@ -170,9 +170,8 @@ Todavía sin asignar.
 ## Pendiente de Sprint 0 (a cargo de Erick)
 
 Actualizado 2026-09-27. Hechas: `T-01`, `T-02`, `T-03`, `T-06`, `T-07`,
-`T-11`, `T-13`. En progreso: `T-04`, `T-05`. `T-08/T-09/T-10` delegadas al
-agente de `single-iac` (mismo dueño, Erick, por ser tema de arquitectura —
-no es coordinación con otro equipo).
+`T-11`, `T-13`. En progreso: `T-04`, `T-05`, `T-10`. En revisión (por
+Erick, en `single-iac`): `T-08`, `T-09`. Parcial: `T-12`.
 
 - **T-04** (Postgres/Redis local): `docker-compose.yml` + `.env.example`
   listos (sintaxis validada); sin verificar levantado por permisos de
@@ -180,7 +179,17 @@ no es coordinación con otro equipo).
 - **T-05** (migraciones): modelos GORM de las 7 entidades y flag
   `--migrations-only` listos (ADR-008); falta el seed de datos de
   desarrollo.
-- **T-08 / T-09 / T-10** (convenciones, manifiestos K8s, pipeline CI/CD de
-  `single-iac`): delegadas al agente de `single-iac`, esperando respuesta.
-- **T-12** (documentación de entornos local/dev/staging/prod): sin
-  empezar.
+- **T-08 / T-09** (convenciones, manifiestos K8s): el agente de `single-iac`
+  ya entregó todo en su rama `add-cashcastor-namespace` (commit
+  `90baedb`) — **nada aplicado al cluster real**. Pendiente de Erick:
+  revisar el diff, mergear en `single-iac`, y correr `terraform-apply.yml`
+  a mano. Ver ADR-009 para el resumen y las dos desviaciones que propuso
+  (nombres `api`/`web` en vez de `cashcastor-api`/`cashcastor-web`, y la
+  redefinición de T-10).
+- **T-10** (workflow de build+push+deploy): redefinido — vive en este
+  repo, no en `single-iac` (ADR-009). El agente de `single-iac` va a
+  redactar el contenido del workflow (conoce el patrón exacto de otras
+  apps), pero el archivo se agrega acá. Todavía no llegó.
+- **T-12** (documentación de entornos): local ya documentado en
+  `README.md`; dev/qa/prod no aplica en este proyecto por ahora (decisión
+  explícita, ADR-009), no es una tarea pendiente de verdad.

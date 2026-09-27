@@ -129,6 +129,11 @@ paralelizar entre el equipo disponible.
 - Documentar las convenciones encontradas (actualiza la pregunta abierta #8
   de `supuestos-y-preguntas-abiertas.md`; no se modifica ese archivo en esta
   entrega, pero es insumo directo para hacerlo después).
+- **Estado (2026-09-27): resuelto por el agente de `single-iac`** —
+  namespace `cashcastor` agregado a `var.apps`, formato de Secrets/
+  ConfigMaps y estructura de pipeline documentados en su ADR-0017. Ver
+  ADR-009 de este repo para el resumen. Pendiente: revisión y merge de la
+  rama `add-cashcastor-namespace` por el PO.
 - **Dependencias:** ninguna, pero bloquea T-09 y T-10. Es la tarea de mayor
   riesgo de calendario por depender de un equipo externo: priorizarla desde
   el día 1 de la Fase 0.
@@ -137,14 +142,24 @@ paralelizar entre el equipo disponible.
 - Namespace `cashcastor` (arquitectura §2.4).
 - ConfigMaps y Secrets para configuración de la app y credenciales de DB,
   siguiendo el formato acordado en T-08.
-- Manifiestos base de `Deployment`/`Service` para `cashcastor-api` y
-  `cashcastor-web` (sin CI/CD todavía, aplicables manualmente para pruebas).
+- Manifiestos base de `Deployment`/`Service` para `api` y `web` (sin CI/CD
+  todavía, aplicables manualmente para pruebas).
+- **Estado (2026-09-27): resuelto por el agente de `single-iac`** —
+  Deployments/Services de `api` y `web`, Postgres+Redis propios, 2
+  Ingress+TLS. Mismo lugar y estado que T-08 (rama sin mergear/aplicar).
 - **Dependencias:** T-08.
 
 ### T-10: Pipeline de CI/CD base
-- Pipeline en `single-iac` que ejecute: lint + test backend, lint + test
-  frontend, build de imágenes, y despliegue a un entorno de desarrollo.
-- Integrar el lint de la OpenAPI spec (T-03) como gate del pipeline.
+- ~~Pipeline en `single-iac` que ejecute: lint + test backend, lint + test
+  frontend, build de imágenes, y despliegue a un entorno de desarrollo.~~
+- **Redefinido (ADR-009, 2026-09-27):** `single-iac` nunca construye ni
+  despliega imágenes de otra app (incidente real de por medio); el
+  workflow de build+push+deploy es de **este** repo, no de `single-iac`.
+  Pendiente: crear ese workflow acá (Erick pidió que lo redacte el agente
+  de `single-iac`, que conoce el patrón exacto, pero que el archivo viva
+  en este repo).
+- Integrar el lint de la OpenAPI spec (T-03, ya hecho como check propio)
+  como gate del pipeline de deploy también.
 - **Dependencias:** T-01, T-02, T-08, T-09.
 
 ### T-11: Observabilidad base
@@ -165,6 +180,12 @@ paralelizar entre el equipo disponible.
 ### T-12: Documentación de entornos
 - Documentar cómo levantar el entorno local (docker-compose), y cómo se
   diferencian dev/staging/prod (namespaces, dominios, niveles de logging).
+- **Estado (2026-09-27): parcialmente resuelto.** Entorno local: ver
+  `README.md` (`docker-compose.yml`, `.env.example`). Entornos
+  dev/staging/prod: `single-iac` **no separa infraestructura por entorno**
+  (un namespace único por app, `cashcastor` mapeado a la rama `develop`) —
+  decisión explícita documentada en ADR-009, no una omisión. Se revisa
+  cuando haya necesidad real (más de un ambiente desplegado a la vez).
 - **Dependencias:** T-04, T-09.
 
 ### T-13: Quality gate de PRs en GitHub Actions

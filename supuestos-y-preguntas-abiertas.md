@@ -46,5 +46,13 @@
 6. ¿La app debe integrarse con el tablero físico de alguna manera (NFC, QR en
    casillas)?
 7. ¿Cuál es el TTL exacto de los JWT y la estrategia de refresh?
-8. ¿El repo `single-iac` tiene convenciones específicas para nombres de
-   namespaces, secrets o pipelines que deba seguir?
+8. ~~¿El repo `single-iac` tiene convenciones específicas para nombres de
+   namespaces, secrets o pipelines que deba seguir?~~ **RESUELTA
+   (2026-09-27):** sí. Namespace por app vía Terraform (`var.apps`),
+   nombres de recursos cortos (`api`/`web`, sin prefijo del proyecto), y
+   cada app es dueña de su propio pipeline de build/push/deploy —
+   `single-iac` solo aplica manifiestos (workflow genérico). Ver
+   `docs/04-adrs/ADR-009-modelo-cicd-single-iac.md` y el ADR-0017 del
+   propio repo `single-iac`. Pendiente: mergear la rama
+   `add-cashcastor-namespace` de `single-iac` y correr `terraform-apply.yml`
+   (a mano, por el PO).

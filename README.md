@@ -91,7 +91,8 @@ docs/08-openapi.yaml -o docs/openapi.html` después de tocar la spec).
         │   ├── ADR-005-auth-pin-jwt.md
         │   ├── ADR-006-pwa-vite.md
         │   ├── ADR-007-kubernetes-single-iac.md
-        │   └── ADR-008-gorm-migraciones.md
+        │   ├── ADR-008-gorm-migraciones.md
+        │   └── ADR-009-modelo-cicd-single-iac.md
         ├── 05-roadmap.md
         ├── 06-epicas.md
         ├── 07-historias-usuario.md

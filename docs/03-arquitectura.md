@@ -62,13 +62,33 @@ sesiones, caché y pub/sub para WebSockets.
   - Caché de saldos y arqueos (invalidación por evento).
 
 ### 2.4 Infraestructura (Kubernetes)
-- Namespace: `cashcastor`.
-- Deployments: `cashcastor-api` (Go), `cashcastor-web` (Nginx + estáticos).
-- Services: ClusterIP para API y web.
-- Ingress: Nginx Ingress con TLS (cert-manager).
-- StatefulSets: PostgreSQL (o uso de operador), Redis (o servicio gestionado).
-- ConfigMaps/Secrets: Configuración de la app, credenciales de DB.
-- CI/CD: Pipelines definidos en `single-iac` (siguiendo reglas del repo).
+
+**Actualizado 2026-09-27** con lo que realmente aprovisionó `single-iac`
+(rama `add-cashcastor-namespace`, pendiente de merge/apply — ver ADR-009).
+
+- Namespace: `cashcastor` (agregado a `var.apps` en `01-cluster-resources`
+  de `single-iac`: da namespace + quota + NetworkPolicy gratis, mismo
+  patrón que el resto de apps de ese repo).
+- Deployments/Services: `api` (Go) y `web` (Nginx + estáticos) — nombres
+  cortos porque el namespace ya da el scope; es el patrón real de
+  `single-iac`, no `cashcastor-api`/`cashcastor-web` como se bocetó
+  originalmente.
+- DNS: dos hosts (`cashcastor` y `cashcastor-api`), cada uno con su
+  Ingress + TLS (cert-manager).
+- Postgres y Redis: propios del namespace (no un patrón compartido entre
+  apps), mismo criterio que otras apps de `single-iac`.
+- ConfigMaps/Secrets: configuración de la app y credenciales de DB (ver
+  `docs/architecture/secrets.md` en `single-iac`).
+- CI/CD: **cada app construye, publica y despliega su propia imagen**
+  (ADR-009); `single-iac` solo aplica los manifiestos (workflow genérico,
+  ya cubre `cashcastor` sin cambios). El workflow de build+push+deploy
+  vive en este repo, no en `single-iac`.
+- Sin separación de infraestructura por entorno (dev/qa/prod): un único
+  namespace `cashcastor`, mapeado a la rama `develop`. Decisión explícita
+  de `single-iac` (no toda la organización usa infra separada por entorno,
+  ADR-0002 de ese repo) y de este proyecto (triplicar infra ahora sería
+  especulativo, sin lógica de negocio real todavía) — se revisa cuando
+  haya necesidad real.
 
 ## 3. Decisiones de Diseño Clave
 
