@@ -28,7 +28,7 @@ Sprint 0 está al final de este archivo.
 |----|------------|--------|
 | T-01 | Erick | Hecho |
 | T-02 | Erick | Hecho |
-| T-03 | Erick | Por hacer |
+| T-03 | Erick | Hecho |
 | T-04 | Erick | En progreso — `docker-compose.yml` listo, sin verificar levantado (permiso de Docker) |
 | T-05 | Erick | En progreso — modelos GORM y flag `--migrations-only` listos; falta seed de datos |
 | T-06 | Erick | Hecho |
@@ -169,14 +169,11 @@ Todavía sin asignar.
 
 ## Pendiente de Sprint 0 (a cargo de Erick)
 
-Actualizado 2026-09-27. Hechas: `T-01`, `T-02`, `T-06`, `T-07`, `T-11`,
-`T-13`. En
-progreso: `T-04`, `T-05`. `T-08/T-09/T-10` delegadas al agente de
-`single-iac` (mismo dueño, Erick, por ser tema de arquitectura — no es
-coordinación con otro equipo).
+Actualizado 2026-09-27. Hechas: `T-01`, `T-02`, `T-03`, `T-06`, `T-07`,
+`T-11`, `T-13`. En progreso: `T-04`, `T-05`. `T-08/T-09/T-10` delegadas al
+agente de `single-iac` (mismo dueño, Erick, por ser tema de arquitectura —
+no es coordinación con otro equipo).
 
-- **T-03** (OpenAPI): falta agregar el lint (`@redocly/cli`) al pipeline de
-  CI y publicar la spec como documentación navegable (Redoc/Swagger UI).
 - **T-04** (Postgres/Redis local): `docker-compose.yml` + `.env.example`
   listos (sintaxis validada); sin verificar levantado por permisos de
   Docker en este entorno.

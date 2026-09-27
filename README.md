@@ -58,7 +58,10 @@ docker run -p 8081:80 cashcastor-web
 
 El contrato de la API (endpoints, schemas, ejemplos) está en
 [`docs/08-openapi.yaml`](docs/08-openapi.yaml). El backend real todavía no
-implementa esos endpoints (ver estado en `backlog/tareas.md`).
+implementa esos endpoints (ver estado en `backlog/tareas.md`). Para verla
+como documentación navegable, abrí `docs/openapi.html` en el navegador
+(generado con Redoc; regenerarlo con `npx @redocly/cli build-docs
+docs/08-openapi.yaml -o docs/openapi.html` después de tocar la spec).
 
 ## Estructura
 
@@ -169,13 +172,17 @@ bypass de Admin del Ruleset, no por auto-aprobación.
 - `Branch name convention` — valida el nombre de la rama origen (ver
   arriba). Se omite si la rama origen es `develop`, `qa` o `prod` (PRs de
   promoción).
-- `Backend build` — compila `backend/` con `go build`.
-- `Frontend build` — compila `frontend/` con `npm run build`.
+- `OpenAPI lint` — corre `@redocly/cli lint` sobre `docs/08-openapi.yaml`
+  en todos los PRs (rápido, no depende de qué carpeta cambió).
+- `Backend build` — compila y lintea (`golangci-lint`) `backend/`.
+- `Frontend build` — compila, lintea, formatea y testea `frontend/`
+  (`npm run lint/format:check/test:run/build`).
 - `Backend Docker image` / `Frontend Docker image` — construyen las
   imágenes de `backend/Dockerfile` y `frontend/Dockerfile`.
-- Los tres últimos solo ejecutan el build real si el PR modificó esa
-  carpeta; si no hay cambios ahí, reportan éxito sin gastar tiempo de CI.
-- Aún no hay pruebas unitarias ni de integración (ver `09-plan-de-pruebas.md`);
+- Los últimos cuatro solo ejecutan el build/lint/test real si el PR
+  modificó esa carpeta; si no hay cambios ahí, reportan éxito sin gastar
+  tiempo de CI.
+- Aún no hay pruebas de integración/e2e reales (ver `09-plan-de-pruebas.md`);
   estos checks son el gate mínimo mientras tanto.
 
 ### Repositorio público
