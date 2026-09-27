@@ -204,3 +204,19 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
 - `03-arquitectura.md` y `10-backlog-sprint-0.md` actualizados para
   reflejar ADR-008 (ya no mencionan `sqlc`/`golang-migrate`/`goose` como
   opciones abiertas).
+
+## [Unreleased] (continuación 7)
+
+### Añadido
+- T-01/T-06 del backlog de Sprint 0 completadas: estructura de capas del
+  backend (`backend/internal/api`, `middleware`, `ws`, `db`, `models`),
+  con las 28 operaciones de `docs/08-openapi.yaml` cableadas como handlers
+  stub (501), middleware de autenticación Bearer (placeholder estructural
+  hasta que exista EP-01), y un hub de WebSocket real (upgrade + registro
+  por partida) sirviendo `GET /games/{code}/ws`.
+- `backend/.golangci.yml` + paso de `golangci-lint` agregado al check
+  `Backend build` de CI.
+- Delegadas a un agente separado (mismo dueño, Erick) las tareas T-08/T-09/
+  T-10 (convenciones, manifiestos K8s y pipeline CI/CD de `single-iac`),
+  con todo el contexto de arquitectura/stack/git-flow necesario para que
+  las resuelva bajo el estándar de ese repo.

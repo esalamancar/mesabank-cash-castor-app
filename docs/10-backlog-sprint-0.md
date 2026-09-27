@@ -38,10 +38,11 @@ paralelizar entre el equipo disponible.
 - Configurar Gin, middleware base (recovery, CORS, logging).
 - Configurar linting (`golangci-lint`) y formato (`gofmt`/`goimports`).
 - Configurar `go test` con soporte para `-race` desde el inicio.
-- **Estado (2026-09-18):** scaffold mínimo creado en `backend/` (`go.mod`,
-  `main.go` con Gin y un endpoint `GET /healthz`, `Dockerfile` multi-stage
-  verificado localmente). Pendiente: estructura de capas, middleware,
-  `golangci-lint`.
+- **Estado (2026-09-27): Hecho.** Estructura de capas en `backend/internal/`
+  (`api/`, `middleware/`, `ws/`, `db/`, `models/`); `golangci-lint`
+  configurado (`.golangci.yml`) y corriendo en CI como parte del check
+  `Backend build`. `go test -race` funcionará una vez existan tests (aún no
+  hay lógica de negocio que probar).
 - **Dependencias:** ninguna.
 
 ### T-02: Setup del repositorio frontend (React + Vite + PWA)
@@ -91,6 +92,14 @@ paralelizar entre el equipo disponible.
 - Hub de WebSocket base (una conexión, un canal por partida, sin lógica de
   negocio aún).
 - Capa de repositorios conectada a PostgreSQL vía GORM (ADR-008).
+- **Estado (2026-09-27): Hecho** (`backend/internal/api/router.go`) —
+  las 28 operaciones de `08-openapi.yaml` están cableadas como stubs (501),
+  con el middleware de auth (`internal/middleware`, placeholder estructural
+  hasta que exista EP-01) aplicado donde el spec lo exige, y el hub de
+  WebSocket (`internal/ws`) sirviendo `GET /games/{code}/ws` de verdad
+  (upgrade + registro por partida, sin lógica de negocio). La capa de
+  repositorios propiamente dicha (queries reales sobre los modelos GORM)
+  se agrega historia por historia a partir de Sprint 1, no de una vez acá.
 - **Dependencias:** T-01, T-05.
 
 ### T-07: Cliente API + WebSocket base en el frontend

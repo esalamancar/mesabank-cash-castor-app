@@ -26,12 +26,12 @@ Sprint 0 está al final de este archivo.
 
 | ID | Asignado a | Estado |
 |----|------------|--------|
-| T-01 | Erick | En progreso — scaffold mínimo listo, falta estructura de capas y linting |
+| T-01 | Erick | Hecho |
 | T-02 | Erick | En progreso — scaffold mínimo listo, falta plugin PWA y store |
 | T-03 | Erick | Por hacer |
-| T-04 | Erick | Por hacer |
-| T-05 | Erick | Por hacer — depende de T-04 |
-| T-06 | Erick | Por hacer — depende de T-01, T-05 |
+| T-04 | Erick | En progreso — `docker-compose.yml` listo, sin verificar levantado (permiso de Docker) |
+| T-05 | Erick | En progreso — modelos GORM y flag `--migrations-only` listos; falta seed de datos |
+| T-06 | Erick | Hecho |
 | T-07 | Erick | Por hacer — depende de T-02, T-03 |
 | T-08 | Erick | Por hacer — mayor riesgo de calendario (depende de un equipo externo); prioridad |
 | T-09 | Erick | Por hacer — depende de T-08 |
@@ -68,26 +68,24 @@ Todavía sin asignar.
 
 ## Pendiente de Sprint 0 (a cargo de Erick)
 
-Solo `T-13` está terminado. Todo lo demás sigue pendiente:
+Actualizado 2026-09-27. Hechas: `T-01`, `T-06`, `T-13`. En progreso: `T-04`,
+`T-05`. `T-08/T-09/T-10` delegadas al agente de `single-iac` (mismo dueño,
+Erick, por ser tema de arquitectura — no es coordinación con otro equipo).
 
-- **T-01 / T-02** (scaffold backend/frontend): el scaffold mínimo ya existe
-  y compila, pero falta la estructura de capas del backend
-  (`api/`, `service/`, `repository/`, `ws/`, `config/`) + `golangci-lint`,
-  y del lado frontend falta el plugin PWA, el store global, ESLint/Prettier
-  y Vitest.
+- **T-02** (scaffold frontend): el scaffold mínimo ya existe y compila,
+  falta el plugin PWA, el store global, ESLint/Prettier y Vitest.
 - **T-03** (OpenAPI): falta agregar el lint (`@redocly/cli`) al pipeline de
   CI y publicar la spec como documentación navegable (Redoc/Swagger UI).
-- **T-04** (Postgres/Redis local): sin empezar, `docker-compose.yml` +
-  `.env.example` pendientes.
-- **T-05** (migraciones): sin empezar, depende de T-04.
-- **T-06** (esqueleto de capas backend, handlers stub, hub WS base): sin
-  empezar, depende de T-01/T-05.
+- **T-04** (Postgres/Redis local): `docker-compose.yml` + `.env.example`
+  listos (sintaxis validada); sin verificar levantado por permisos de
+  Docker en este entorno.
+- **T-05** (migraciones): modelos GORM de las 7 entidades y flag
+  `--migrations-only` listos (ADR-008); falta el seed de datos de
+  desarrollo.
 - **T-07** (cliente API + WebSocket del frontend): sin empezar, depende de
   T-02/T-03.
-- **T-08** (coordinación con `single-iac`): sin empezar — es la tarea de
-  mayor riesgo de calendario porque depende de un equipo externo.
-- **T-09 / T-10** (manifiestos de Kubernetes, pipeline de CI/CD en
-  `single-iac`): sin empezar, bloqueadas por T-08.
+- **T-08 / T-09 / T-10** (convenciones, manifiestos K8s, pipeline CI/CD de
+  `single-iac`): delegadas al agente de `single-iac`, esperando respuesta.
 - **T-11** (observabilidad: logging estructurado, `readyz`, métricas):
   sin empezar, solo existe el `GET /healthz` básico del scaffold.
 - **T-12** (documentación de entornos local/dev/staging/prod): sin
