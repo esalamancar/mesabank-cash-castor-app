@@ -152,3 +152,12 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   Se resolvió con el check de CI `Branch name convention` en vez de la
   regla nativa: mismo efecto práctico (bloquea el merge), sin necesidad de
   upgrade de plan.
+
+## [Unreleased] (continuación 3)
+
+### Cambiado
+- `backlog/asignaciones.md`: reparto de Sprint 0 corregido por frente real
+  (2026-09-27). Todos los devs son fullstack; para este sprint Harri y Cris
+  se enfocan en backend, Aleja y Andrety en frontend, Erick en DevOps/
+  infraestructura/arquitectura (además de PO). Reemplaza el reparto
+  anterior, que tenía a Aleja y Andrety mezclados entre backend/frontend.
