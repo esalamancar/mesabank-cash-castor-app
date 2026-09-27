@@ -3,6 +3,63 @@
 Documentación inicial (MVP) para **CashCastor**, una aplicación web que digitaliza la
 gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío Rico.
 
+> **¿Sos dev nuevo en esto?** Leé en orden: esta sección ("Dónde encontrar
+> todo"), después "Cómo empezar a desarrollar", y después "Flujo de trabajo
+> (Git)" antes de tu primer PR.
+
+## Dónde encontrar todo
+
+| Carpeta/archivo | Qué es | Cuándo mirarlo |
+|---|---|---|
+| [`docs/`](docs/) | Documentación BMAD: brief, PRD, arquitectura, ADRs, roadmap, épicas, historias de usuario (con criterios de aceptación en Gherkin), OpenAPI, plan de pruebas, backlog de Sprint 0, reglamento de los juegos | Para entender **qué** hay que construir, **por qué**, y con qué reglas de negocio/criterios de aceptación |
+| [`backlog/tareas.md`](backlog/tareas.md) | Todas las épicas/features/fixes con su ID y estado actual (`Por hacer`/`En progreso`/`En revisión`/`Hecho`) | Para ver **qué está pendiente** y actualizar el estado de lo que estés haciendo |
+| [`backlog/asignaciones.md`](backlog/asignaciones.md) | Quién está trabajando en cada ID, y el frente (backend/frontend/DevOps) de cada dev en el sprint actual | Para saber **quién hace qué** ahora mismo |
+| [`backend/`](backend/) | Código del backend (Go + Gin) | Trabajo de backend |
+| [`frontend/`](frontend/) | Código del frontend (Vite + React + TypeScript) | Trabajo de frontend |
+| [`supuestos-y-preguntas-abiertas.md`](supuestos-y-preguntas-abiertas.md) | Supuestos ya tomados y preguntas de negocio todavía sin resolver | Si algo del comportamiento esperado no está claro, revisá acá antes de asumir |
+| [`.github/workflows/quality-checks.yml`](.github/workflows/quality-checks.yml) | Los checks que corren en cada PR | Para entender por qué un PR está en rojo |
+| [`CHANGELOG.md`](CHANGELOG.md) | Historial de decisiones y cambios de alcance | Para ver el porqué de una decisión ya tomada |
+
+**Regla general:** `docs/` es planeación (cambia poco, es el diseño
+acordado); `backlog/` es el estado real del trabajo (cambia todo el
+tiempo). Si algo en `backlog/` contradice `docs/`, `docs/` manda salvo que
+se haya discutido y actualizado explícitamente.
+
+## Cómo empezar a desarrollar
+
+Prerrequisitos: Go 1.22+, Node 20+, Docker (para construir las imágenes).
+
+### Backend
+
+```bash
+cd backend
+go run .                 # levanta el servidor en :8080 (GET /healthz)
+# o, para probar la imagen de despliegue:
+docker build -t cashcastor-api .
+docker run -p 8080:8080 cashcastor-api
+```
+
+Es un scaffold mínimo: todavía no conecta a Postgres/Redis (eso es
+`T-04`/`T-05` en `backlog/tareas.md`, sin hacer aún).
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev               # servidor de desarrollo con hot-reload
+npm run build              # build de producción a dist/
+# o, para probar la imagen de despliegue (sirve el build vía Nginx):
+docker build -t cashcastor-web .
+docker run -p 8081:80 cashcastor-web
+```
+
+### API
+
+El contrato de la API (endpoints, schemas, ejemplos) está en
+[`docs/08-openapi.yaml`](docs/08-openapi.yaml). El backend real todavía no
+implementa esos endpoints (ver estado en `backlog/tareas.md`).
+
 ## Estructura
 
     mesabank-cash-castor-app/
@@ -42,14 +99,20 @@ gestión de la caja del banco en juegos de mesa económicos como Monopoly o Tío
 ## Alcance de esta fase
 
 - **Fase anterior:** documentación (Brief, PRD, Arquitectura, ADRs, Roadmap).
-- **Fase actual:** desglose técnico para los devs (épicas, historias de
+- **Fase siguiente:** desglose técnico para los devs (épicas, historias de
   usuario, OpenAPI, plan de pruebas, backlog de sprint 0).
+- **Fase actual:** arranque de Sprint 0 — scaffold de backend/frontend,
+  git-flow y CI configurados, equipo confirmado y trabajando (ver
+  `backlog/`).
 
 ## Roles
 
-- **Product Owner / Arquitecto:** Erick Salamanca
-- **Equipo de desarrollo:** Harri, Aleja, Andrety, Cris. Ver reparto de
-  tareas en [`backlog/asignaciones.md`](backlog/asignaciones.md).
+- **Product Owner / Arquitecto / DevOps:** Erick Salamanca.
+- **Equipo de desarrollo (todos fullstack):** Harri, Cris (frente backend
+  en el sprint actual), Aleja, Andrety (frente frontend en el sprint
+  actual). El frente es el foco del sprint, no una limitación de skill —
+  ver el detalle y las tareas asignadas en
+  [`backlog/asignaciones.md`](backlog/asignaciones.md).
 
 ## Flujo de trabajo (Git)
 

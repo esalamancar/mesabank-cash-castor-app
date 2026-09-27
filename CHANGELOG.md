@@ -161,3 +161,13 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   se enfocan en backend, Aleja y Andrety en frontend, Erick en DevOps/
   infraestructura/arquitectura (además de PO). Reemplaza el reparto
   anterior, que tenía a Aleja y Andrety mezclados entre backend/frontend.
+
+## [Unreleased] (continuación 4)
+
+### Cambiado
+- `README.md` reorganizado como punto de entrada real para el equipo:
+  sección nueva "Dónde encontrar todo" (tabla docs/ vs backlog/ vs backend/
+  vs frontend/, con cuándo mirar cada uno) y "Cómo empezar a desarrollar"
+  (comandos para correr backend y frontend local y con Docker). Se agregó
+  un banner al inicio guiando el orden de lectura para un dev nuevo, y se
+  actualizó "Roles" con el frente (backend/frontend/DevOps) de cada dev.
