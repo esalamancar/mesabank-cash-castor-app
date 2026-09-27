@@ -106,3 +106,20 @@ El formato se basa en Keep a Changelog y este proyecto se adhiere a Semantic Ver
   (herramientas, experiencia), no es una propiedad fija de la tarea —
   distinto de estimar costo. Se conserva el orden de dependencia (backlog)
   y la prioridad MoSCoW (historias), que sí son decisiones de negocio.
+
+## [Unreleased] (continuación)
+
+### Añadido
+- Carpeta `backlog/`: tablero de trabajo vivo, separado de `docs/`.
+  - `backlog/tareas.md`: todas las épicas (`EP-xx`), features (`US-xxx`,
+    reutilizando los IDs de `07-historias-usuario.md`) y las tareas de
+    Sprint 0 (`T-xx`, de `10-backlog-sprint-0.md`), con su estado actual.
+    Incluye una sección `FIX-xxx` vacía para fixes no planeados que surjan
+    durante el desarrollo.
+  - `backlog/asignaciones.md`: quién está trabajando en cada ID. Equipo de
+    desarrollo confirmado: Harri, Aleja, Andrety, Cris (más Erick como PO/
+    DevOps). Reparto inicial de Sprint 0 aplicado; las épicas de fase 1 en
+    adelante quedan sin asignar hasta que arranque cada fase.
+- `README.md` actualizado: equipo de desarrollo (antes "por definir"),
+  árbol de estructura completo (`backend/`, `frontend/`, `backlog/`,
+  `.github/`, que faltaban desde que se agregaron).
