@@ -39,7 +39,7 @@ sesiones, caché y pub/sub para WebSockets.
   autenticación (JWT), rate limiting.
 - Capa de Servicios: Lógica de negocio: transferencias, préstamos,
   liquidación, cálculo de intereses, arqueo.
-- Capa de Repositorios: Acceso a PostgreSQL (sqlc o GORM), Redis para
+- Capa de Repositorios: Acceso a PostgreSQL vía GORM (ADR-008), Redis para
   idempotencia y pub/sub.
 - Capa de WebSocket: Hub de conexiones por partida, broadcast de eventos
   (saldo actualizado, transacción, arqueo).
@@ -80,6 +80,7 @@ sesiones, caché y pub/sub para WebSockets.
 | PWA estática servida por Nginx | No requiere SSR; tolera desconexiones con Service Worker. |
 | JWT con PIN | Auth simple para el contexto de juego; sin OAuth. |
 | Masa monetaria fija | Evita inflación artificial; el banco controla la emisión. |
+| GORM con AutoMigrate (ADR-008) | Esquema definido en un solo lugar (modelos Go); sin scripts SQL manuales que se puedan desincronizar. |
 
 ## 4. Flujo de una Transferencia (Ejemplo)
 1. Jugador A envía `POST /games/{code}/transfer` con `idempotency_key`.

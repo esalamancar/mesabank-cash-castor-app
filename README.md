@@ -87,7 +87,8 @@ implementa esos endpoints (ver estado en `backlog/tareas.md`).
         │   ├── ADR-004-postgres-redis.md
         │   ├── ADR-005-auth-pin-jwt.md
         │   ├── ADR-006-pwa-vite.md
-        │   └── ADR-007-kubernetes-single-iac.md
+        │   ├── ADR-007-kubernetes-single-iac.md
+        │   └── ADR-008-gorm-migraciones.md
         ├── 05-roadmap.md
         ├── 06-epicas.md
         ├── 07-historias-usuario.md
