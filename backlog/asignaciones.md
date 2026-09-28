@@ -35,7 +35,7 @@ Sprint 0 está al final de este archivo.
 | T-07 | Erick | Hecho |
 | T-08 | Erick | En revisión — resuelto por el agente de `single-iac`, pendiente merge/apply |
 | T-09 | Erick | En revisión — mismo estado que T-08 |
-| T-10 | Erick | Por hacer — redefinido (ADR-009): workflow propio de build+push+deploy en este repo |
+| T-10 | Erick | En revisión — `deploy.yml` recibido de `single-iac`, sin probar, esperando tu aprobación de merge |
 | T-11 | Erick | Hecho |
 | T-12 | Erick | Parcial — local documentado; dev/qa/prod no aplica (ADR-009) |
 | T-13 | Erick | Hecho |

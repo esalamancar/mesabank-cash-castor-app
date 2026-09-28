@@ -292,3 +292,19 @@ delegadas al agente de `single-iac`.**
   del PO.
 - Redis queda desplegado sin cliente todavía en `backend/` (decisión: se
   conecta cuando el código lo necesite — idempotencia, sesiones, pub/sub).
+
+## [Unreleased] (continuación 13)
+
+### Añadido (pendiente de aprobación de merge)
+- `.github/workflows/deploy.yml` (T-10): build+push de
+  `cashcastor-api`/`cashcastor-web` a `ghcr.io` y despliegue vía SSH a un
+  VPS con k3s, con Job de migración GORM (`--migrations-only`) antes de
+  mover tráfico. Redactado por el agente de `single-iac` sobre el patrón
+  real de otra app de ese repo (YAML validado, **sin probar contra el
+  cluster real**). Requiere, antes de la primera corrida: T-08/T-09
+  aplicadas, 4 secrets de repo nuevos, y `ghcr-pull-secret` en el
+  namespace — todo documentado en `README.md`.
+- **Este PR queda abierto sin fusionar** hasta confirmación explícita del
+  PO: a diferencia de los anteriores, mergearlo dispara build+push de
+  imágenes reales a `ghcr.io` de inmediato (no requiere los secrets de
+  despliegue para eso).

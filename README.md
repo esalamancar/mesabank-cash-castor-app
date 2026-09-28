@@ -186,6 +186,32 @@ bypass de Admin del Ruleset, no por auto-aprobación.
 - Aún no hay pruebas de integración/e2e reales (ver `09-plan-de-pruebas.md`);
   estos checks son el gate mínimo mientras tanto.
 
+### Despliegue (`.github/workflows/deploy.yml`)
+
+Workflow separado del quality gate (T-10, ver ADR-009): build + push de
+`cashcastor-api`/`cashcastor-web` a `ghcr.io` en cada push a `develop`, y
+despliegue vía SSH a un VPS con k3s (`kubectl set image`, con un Job de
+migración — `--migrations-only`, ADR-008 — antes de mover tráfico en
+`api`). Redactado por el agente de `single-iac` sobre el patrón real de
+otra app de ese repo; **sin probar contra el cluster real todavía**.
+
+Antes de que corra en verde hace falta, en ese orden:
+1. Mergear y aplicar (`terraform-apply.yml`, a mano) la rama
+   `add-cashcastor-namespace` de `single-iac` — si no, `kubectl set image`
+   falla con "not found" porque `api`/`web` todavía no existen en el
+   cluster.
+2. Agregar 4 secrets a este repo (sincronizados desde `single-iac` con su
+   `scripts/sync-secret.sh`): `TERRAFORM_SVC_SSH_PRIVATE_KEY`, `VPS_HOST`,
+   `VPS_SSH_PORT`, `VPS_SSH_USER`.
+3. Confirmar que `ghcr-pull-secret` existe en el namespace `cashcastor`
+   (paso manual documentado en `k8s-manifests/cashcastor/README.md` de
+   `single-iac`), si el paquete de GHCR queda privado.
+
+Los jobs `build-api`/`build-web` **no dependen de esos secrets** y van a
+publicar imágenes reales en `ghcr.io/esalamancar/cashcastor-{api,web}` con
+el `GITHUB_TOKEN` por defecto apenas este workflow esté en `develop` —
+antes incluso de que el despliegue funcione.
+
 ### Repositorio público
 
 Las reglas de rama (Ruleset) en GitHub requieren plan Pro para repos

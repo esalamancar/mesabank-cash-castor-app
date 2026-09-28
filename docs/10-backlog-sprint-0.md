@@ -155,9 +155,14 @@ paralelizar entre el equipo disponible.
 - **Redefinido (ADR-009, 2026-09-27):** `single-iac` nunca construye ni
   despliega imágenes de otra app (incidente real de por medio); el
   workflow de build+push+deploy es de **este** repo, no de `single-iac`.
-  Pendiente: crear ese workflow acá (Erick pidió que lo redacte el agente
-  de `single-iac`, que conoce el patrón exacto, pero que el archivo viva
-  en este repo).
+- **Estado (2026-09-27): en revisión.** `.github/workflows/deploy.yml`
+  recibido (redactado por el agente de `single-iac` sobre su patrón real),
+  YAML validado, **sin probar contra el cluster real**. Requiere, en
+  orden: T-08/T-09 aplicadas contra el cluster, 4 secrets de repo
+  sincronizados desde `single-iac`, y `ghcr-pull-secret` en el namespace
+  (ver `README.md`). Pendiente de que Erick apruebe el merge — los jobs de
+  build ya publican imágenes reales en `ghcr.io` apenas se mergee, con o
+  sin los secrets de despliegue.
 - Integrar el lint de la OpenAPI spec (T-03, ya hecho como check propio)
   como gate del pipeline de deploy también.
 - **Dependencias:** T-01, T-02, T-08, T-09.
